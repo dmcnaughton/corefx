@@ -558,9 +558,9 @@ namespace System.IO.Packaging
         private string _contentType = null;
         private string _type = string.Empty;
         private string _subType = string.Empty;
-        private string _originalString;
+        private readonly string _originalString;
         private Dictionary<string, string> _parameterDictionary = null;
-        private bool _isInitialized = false;
+        private readonly bool _isInitialized = false;
 
         private const string Quote = "\"";
         private const char SemicolonSeparator = ';';
@@ -568,12 +568,13 @@ namespace System.IO.Packaging
 
         //This array is sorted by the ascii value of these characters.
         private static readonly char[] s_allowedCharacters =
-         { '!' /*33*/, '#' /*35*/ , '$'  /*36*/,
-           '%' /*37*/, '&' /*38*/ , '\'' /*39*/,
-           '*' /*42*/, '+' /*43*/ , '-'  /*45*/,
-           '.' /*46*/, '^' /*94*/ , '_'  /*95*/,
-           '`' /*96*/, '|' /*124*/, '~'  /*126*/,
-         };
+        {
+            '!' /*33*/, '#'  /*35*/, '$'  /*36*/,
+            '%' /*37*/, '&'  /*38*/, '\'' /*39*/,
+            '*' /*42*/, '+'  /*43*/, '-'  /*45*/,
+            '.' /*46*/, '^'  /*94*/, '_'  /*95*/,
+            '`' /*96*/, '|' /*124*/, '~' /*126*/,
+        };
 
         //Linear White Space characters
         private static readonly char[] s_linearWhiteSpaceChars =

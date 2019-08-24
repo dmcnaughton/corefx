@@ -7,6 +7,12 @@
 
 namespace System.Text.Json
 {
+    public enum DuplicatePropertyNameHandling
+    {
+        Replace = 0,
+        Ignore = 1,
+        Error = 2,
+    }
     public sealed partial class JsonBoolean : System.Text.Json.JsonNode, System.IEquatable<System.Text.Json.JsonBoolean>
     {
         public JsonBoolean() { }
@@ -260,6 +266,56 @@ namespace System.Text.Json
         [System.CLSCompliantAttribute(false)]
         public bool TryGetUInt64(out ulong value) { throw null; }
     }
+    public sealed partial class JsonObject : System.Text.Json.JsonNode, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, System.Text.Json.JsonNode>>, System.Collections.IEnumerable
+    {
+        public JsonObject(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, System.Text.Json.JsonNode>> jsonProperties, System.Text.Json.DuplicatePropertyNameHandling duplicatePropertyNameHandling = System.Text.Json.DuplicatePropertyNameHandling.Replace) { }
+        public JsonObject(System.Text.Json.DuplicatePropertyNameHandling duplicatePropertyNameHandling = System.Text.Json.DuplicatePropertyNameHandling.Replace) { }
+        public System.Text.Json.JsonNode this[string propertyName] { get { throw null; } set { } }
+        public System.Collections.Generic.ICollection<string> PropertyNames { get { throw null; } }
+        public System.Collections.Generic.ICollection<System.Text.Json.JsonNode> PropertyValues { get { throw null; } }
+        public void Add(System.Collections.Generic.KeyValuePair<string, System.Text.Json.JsonNode> jsonProperty) { }
+        public void Add(string propertyName, bool propertyValue) { }
+        public void Add(string propertyName, byte propertyValue) { }
+        public void Add(string propertyName, System.DateTime propertyValue) { }
+        public void Add(string propertyName, System.DateTimeOffset propertyValue) { }
+        public void Add(string propertyName, decimal propertyValue) { }
+        public void Add(string propertyName, double propertyValue) { }
+        public void Add(string propertyName, System.Guid propertyValue) { }
+        public void Add(string propertyName, short propertyValue) { }
+        public void Add(string propertyName, int propertyValue) { }
+        public void Add(string propertyName, long propertyValue) { }
+        public void Add(string propertyName, System.ReadOnlySpan<char> propertyValue) { }
+        [System.CLSCompliantAttribute(false)]
+        public void Add(string propertyName, sbyte propertyValue) { }
+        public void Add(string propertyName, float propertyValue) { }
+        public void Add(string propertyName, string propertyValue) { }
+        public void Add(string propertyName, System.Text.Json.JsonNode propertyValue) { }
+        [System.CLSCompliantAttribute(false)]
+        public void Add(string propertyName, ushort propertyValue) { }
+        [System.CLSCompliantAttribute(false)]
+        public void Add(string propertyName, uint propertyValue) { }
+        [System.CLSCompliantAttribute(false)]
+        public void Add(string propertyName, ulong propertyValue) { }
+        public void AddRange(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, System.Text.Json.JsonNode>> jsonProperties) { }
+        public bool ContainsProperty(string propertyName) { throw null; }
+        public System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string, System.Text.Json.JsonNode>> GetEnumerator() { throw null; }
+        public System.Text.Json.JsonObject GetJsonObjectPropertyValue(string propertyName) { throw null; }
+        public System.Text.Json.JsonNode GetPropertyValue(string propertyName) { throw null; }
+        public bool Remove(string propertyName) { throw null; }
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { throw null; }
+        public bool TryGetJsonObjectPropertyValue(string propertyName, out System.Text.Json.JsonObject jsonObject) { throw null; }
+        public bool TryGetPropertyValue(string propertyName, out System.Text.Json.JsonNode jsonNode) { throw null; }
+    }
+    public partial struct JsonObjectEnumerator : System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string, System.Text.Json.JsonNode>>, System.Collections.IEnumerator, System.IDisposable
+    {
+        private object _dummy;
+        public JsonObjectEnumerator(System.Text.Json.JsonObject jsonObject) { throw null; }
+        public System.Collections.Generic.KeyValuePair<string, System.Text.Json.JsonNode> Current { get { throw null; } }
+        object System.Collections.IEnumerator.Current { get { throw null; } }
+        public void Dispose() { }
+        public bool MoveNext() { throw null; }
+        public void Reset() { }
+    }
     public readonly partial struct JsonProperty
     {
         private readonly object _dummy;
@@ -295,11 +351,11 @@ namespace System.Text.Json
         public static TValue Deserialize<TValue>(System.ReadOnlySpan<byte> utf8Json, System.Text.Json.JsonSerializerOptions options = null) { throw null; }
         public static TValue Deserialize<TValue>(string json, System.Text.Json.JsonSerializerOptions options = null) { throw null; }
         public static TValue Deserialize<TValue>(ref System.Text.Json.Utf8JsonReader reader, System.Text.Json.JsonSerializerOptions options = null) { throw null; }
-        public static string Serialize(object value, System.Type type, System.Text.Json.JsonSerializerOptions options = null) { throw null; }
-        public static void Serialize(System.Text.Json.Utf8JsonWriter writer, object value, System.Type type, System.Text.Json.JsonSerializerOptions options = null) { }
-        public static System.Threading.Tasks.Task SerializeAsync(System.IO.Stream utf8Json, object value, System.Type type, System.Text.Json.JsonSerializerOptions options = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { throw null; }
+        public static string Serialize(object value, System.Type inputType, System.Text.Json.JsonSerializerOptions options = null) { throw null; }
+        public static void Serialize(System.Text.Json.Utf8JsonWriter writer, object value, System.Type inputType, System.Text.Json.JsonSerializerOptions options = null) { }
+        public static System.Threading.Tasks.Task SerializeAsync(System.IO.Stream utf8Json, object value, System.Type inputType, System.Text.Json.JsonSerializerOptions options = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { throw null; }
         public static System.Threading.Tasks.Task SerializeAsync<TValue>(System.IO.Stream utf8Json, TValue value, System.Text.Json.JsonSerializerOptions options = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { throw null; }
-        public static byte[] SerializeToUtf8Bytes(object value, System.Type type, System.Text.Json.JsonSerializerOptions options = null) { throw null; }
+        public static byte[] SerializeToUtf8Bytes(object value, System.Type inputType, System.Text.Json.JsonSerializerOptions options = null) { throw null; }
         public static byte[] SerializeToUtf8Bytes<TValue>(TValue value, System.Text.Json.JsonSerializerOptions options = null) { throw null; }
         public static void Serialize<TValue>(System.Text.Json.Utf8JsonWriter writer, TValue value, System.Text.Json.JsonSerializerOptions options = null) { }
         public static string Serialize<TValue>(TValue value, System.Text.Json.JsonSerializerOptions options = null) { throw null; }
@@ -324,6 +380,9 @@ namespace System.Text.Json
     public sealed partial class JsonString : System.Text.Json.JsonNode, System.IEquatable<System.Text.Json.JsonString>
     {
         public JsonString() { }
+        public JsonString(System.DateTime value) { }
+        public JsonString(System.DateTimeOffset value) { }
+        public JsonString(System.Guid value) { }
         public JsonString(System.ReadOnlySpan<char> value) { }
         public JsonString(string value) { }
         public string Value { get { throw null; } set { } }

@@ -12,13 +12,13 @@ namespace System.ComponentModel.Composition.ReflectionModel
 {
     internal class ReflectionParameterImportDefinition : ReflectionImportDefinition
     {
-        private Lazy<ParameterInfo> _importingLazyParameter;
+        private readonly Lazy<ParameterInfo> _importingLazyParameter;
 
         public ReflectionParameterImportDefinition(
             Lazy<ParameterInfo> importingLazyParameter,
             string contractName,
             string requiredTypeIdentity,
-            IEnumerable<KeyValuePair<string,Type>> requiredMetadata,
+            IEnumerable<KeyValuePair<string, Type>> requiredMetadata,
             ImportCardinality cardinality,
             CreationPolicy requiredCreationPolicy,
             IDictionary<string, object> metadata,

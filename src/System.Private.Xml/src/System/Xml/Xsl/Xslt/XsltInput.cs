@@ -21,13 +21,13 @@ namespace System.Xml.Xsl.Xslt
         private const int InitRecordsSize = 1 + 21;
 #endif
 
-        private XmlReader _reader;
-        private IXmlLineInfo _readerLineInfo;
-        private bool _topLevelReader;
-        private CompilerScopeManager<VarPar> _scopeManager;
-        private KeywordsTable _atoms;
-        private Compiler _compiler;
-        private bool _reatomize;
+        private readonly XmlReader _reader;
+        private readonly IXmlLineInfo _readerLineInfo;
+        private readonly bool _topLevelReader;
+        private readonly CompilerScopeManager<VarPar> _scopeManager;
+        private readonly KeywordsTable _atoms;
+        private readonly Compiler _compiler;
+        private readonly bool _reatomize;
 
         // Cached properties. MoveTo* functions set them.
         private XmlNodeType _nodeType;
@@ -570,14 +570,14 @@ namespace System.Xml.Xsl.Xslt
 
         public struct DelayedQName
         {
-            private string _prefix;
-            private string _localName;
+            private readonly string _prefix;
+            private readonly string _localName;
             public DelayedQName(ref Record rec)
             {
                 _prefix = rec.prefix;
                 _localName = rec.localName;
             }
-            public static implicit operator string (DelayedQName qn)
+            public static implicit operator string(DelayedQName qn)
             {
                 return qn._prefix.Length == 0 ? qn._localName : (qn._prefix + ':' + qn._localName);
             }
@@ -703,7 +703,7 @@ namespace System.Xml.Xsl.Xslt
         private XsltAttribute[] _attributes = null;
         // Mapping of attribute names as they ordered in 'attributes' array
         // to there's numbers in actual stylesheet as they ordered in 'records' array
-        private int[] _xsltAttributeNumber = new int[21];
+        private readonly int[] _xsltAttributeNumber = new int[21];
 
         public ContextInfo GetAttributes()
         {
@@ -1037,26 +1037,17 @@ namespace System.Xml.Xsl.Xslt
 
         // ----------------------- ISourceLineInfo -----------------------
 
-        private static int PositionAdjustment(XmlNodeType nt)
-        {
-            switch (nt)
+        private static int PositionAdjustment(XmlNodeType nt) =>
+            nt switch
             {
-                case XmlNodeType.Element:
-                    return 1;   // "<"
-                case XmlNodeType.CDATA:
-                    return 9;   // "<![CDATA["
-                case XmlNodeType.ProcessingInstruction:
-                    return 2;   // "<?"
-                case XmlNodeType.Comment:
-                    return 4;   // "<!--"
-                case XmlNodeType.EndElement:
-                    return 2;   // "</"
-                case XmlNodeType.EntityReference:
-                    return 1;   // "&"
-                default:
-                    return 0;
-            }
-        }
+                XmlNodeType.Element => 1,               // "<"
+                XmlNodeType.CDATA => 9,                 // "<![CDATA["
+                XmlNodeType.ProcessingInstruction => 2, // "<?"
+                XmlNodeType.Comment => 4,               // "<!--"
+                XmlNodeType.EndElement => 2,            // "</"
+                XmlNodeType.EntityReference => 1,       // "&"
+                _ => 0,
+            };
 
         public ISourceLineInfo BuildLineInfo()
         {
@@ -1150,7 +1141,7 @@ namespace System.Xml.Xsl.Xslt
             public ISourceLineInfo lineInfo;       // Line info for whole start tag
             public ISourceLineInfo elemNameLi;     // Line info for element name
             public ISourceLineInfo endTagLi;       // Line info for end tag or '/>'
-            private int _elemNameLength;
+            private readonly int _elemNameLength;
 
             // Create ContextInfo based on existing line info (used during AST rewriting)
             internal ContextInfo(ISourceLineInfo lineinfo)
@@ -1199,7 +1190,7 @@ namespace System.Xml.Xsl.Xslt
             // We need this wrapper class because elementTagLi is not yet calculated
             internal class EmptyElementEndTag : ISourceLineInfo
             {
-                private ISourceLineInfo _elementTagLi;
+                private readonly ISourceLineInfo _elementTagLi;
 
                 public EmptyElementEndTag(ISourceLineInfo elementTagLi)
                 {

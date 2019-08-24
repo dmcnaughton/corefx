@@ -20,7 +20,7 @@ namespace System.Xml
 
         private static volatile Type[] s_tokenTypeMap = null;
 
-        private static byte[] s_xsdKatmaiTimeScaleToValueLengthMap = new byte[8] {
+        private static readonly byte[] s_xsdKatmaiTimeScaleToValueLengthMap = new byte[8] {
         // length scale
             3, // 0
             3, // 1
@@ -45,7 +45,7 @@ namespace System.Xml
             Closed = 8
         }
 
-        private static ReadState[] s_scanState2ReadState = {
+        private static readonly ReadState[] s_scanState2ReadState = {
             ReadState.Interactive,
             ReadState.Interactive,
             ReadState.Interactive,
@@ -279,14 +279,14 @@ namespace System.Xml
         // symbol and qname tables
         private SymbolTables _symbolTables;
 
-        private XmlNameTable _xnt;
-        private bool _xntFromSettings;
-        private string _xml;
-        private string _xmlns;
-        private string _nsxmlns;
+        private readonly XmlNameTable _xnt;
+        private readonly bool _xntFromSettings;
+        private readonly string _xml;
+        private readonly string _xmlns;
+        private readonly string _nsxmlns;
 
         // base uri...
-        private string _baseUri;
+        private readonly string _baseUri;
 
         // current parse state
         private ScanState _state;
@@ -317,24 +317,24 @@ namespace System.Xml
         // if it is a simple string value, we cache it
         private string _stringValue;
         // hashtable of current namespaces
-        private Dictionary<string, NamespaceDecl> _namespaces;
+        private readonly Dictionary<string, NamespaceDecl> _namespaces;
         //Hashtable namespaces;
         // linked list of pushed nametables (to support nested binary-xml documents)
         private NestedBinXml _prevNameInfo;
         // XmlTextReader to handle embeded text blocks
         private XmlReader _textXmlReader;
         // close input flag
-        private bool _closeInput;
+        private readonly bool _closeInput;
 
-        private bool _checkCharacters;
-        private bool _ignoreWhitespace;
-        private bool _ignorePIs;
-        private bool _ignoreComments;
-        private DtdProcessing _dtdProcessing;
+        private readonly bool _checkCharacters;
+        private readonly bool _ignoreWhitespace;
+        private readonly bool _ignorePIs;
+        private readonly bool _ignoreComments;
+        private readonly DtdProcessing _dtdProcessing;
 
-        private SecureStringHasher _hasher;
+        private readonly SecureStringHasher _hasher;
         private XmlCharType _xmlCharType;
-        private Encoding _unicode;
+        private readonly Encoding _unicode;
 
         // current version of the protocol
         private byte _version;
@@ -424,15 +424,12 @@ namespace System.Xml
                     settings.NameTable = _xnt;
                 }
                 // 0=>auto, 1=>doc/pre-dtd, 2=>doc/pre-elem, 3=>doc/instance -1=>doc/post-elem, 9=>frag
-                switch (_docState)
+                settings.ConformanceLevel = _docState switch
                 {
-                    case 0:
-                        settings.ConformanceLevel = ConformanceLevel.Auto; break;
-                    case 9:
-                        settings.ConformanceLevel = ConformanceLevel.Fragment; break;
-                    default:
-                        settings.ConformanceLevel = ConformanceLevel.Document; break;
-                }
+                    0 => ConformanceLevel.Auto,
+                    9 => ConformanceLevel.Fragment,
+                    _ => ConformanceLevel.Document,
+                };
                 settings.CheckCharacters = _checkCharacters;
                 settings.IgnoreWhitespace = _ignoreWhitespace;
                 settings.IgnoreProcessingInstructions = _ignorePIs;
@@ -2781,7 +2778,7 @@ namespace System.Xml
 
         private void FinishCDATA()
         {
-            for (;;)
+            while (true)
             {
                 switch (PeekToken())
                 {
@@ -3506,7 +3503,7 @@ namespace System.Xml
                 if (!attr)
                 {
                     // scan if this is whitespace
-                    for (;;)
+                    while (true)
                     {
                         int posNext = pos + 2;
                         if (posNext > end)
@@ -3517,10 +3514,10 @@ namespace System.Xml
                     }
                 }
 
-                for (;;)
+                while (true)
                 {
                     char ch;
-                    for (;;)
+                    while (true)
                     {
                         int posNext = pos + 2;
                         if (posNext > end)
@@ -3846,20 +3843,13 @@ namespace System.Xml
         private DateTimeOffset ValueAsDateTimeOffset()
         {
             CheckValueTokenBounds();
-            switch (_token)
+            return _token switch
             {
-                case BinXmlToken.XSD_KATMAI_DATEOFFSET:
-                    return BinXmlDateTime.XsdKatmaiDateOffsetToDateTimeOffset(_data, _tokDataPos);
-
-                case BinXmlToken.XSD_KATMAI_DATETIMEOFFSET:
-                    return BinXmlDateTime.XsdKatmaiDateTimeOffsetToDateTimeOffset(_data, _tokDataPos);
-
-                case BinXmlToken.XSD_KATMAI_TIMEOFFSET:
-                    return BinXmlDateTime.XsdKatmaiTimeOffsetToDateTimeOffset(_data, _tokDataPos);
-
-                default:
-                    throw ThrowUnexpectedToken(_token);
-            }
+                BinXmlToken.XSD_KATMAI_DATEOFFSET => BinXmlDateTime.XsdKatmaiDateOffsetToDateTimeOffset(_data, _tokDataPos),
+                BinXmlToken.XSD_KATMAI_DATETIMEOFFSET => BinXmlDateTime.XsdKatmaiDateTimeOffsetToDateTimeOffset(_data, _tokDataPos),
+                BinXmlToken.XSD_KATMAI_TIMEOFFSET => BinXmlDateTime.XsdKatmaiTimeOffsetToDateTimeOffset(_data, _tokDataPos),
+                _ => throw ThrowUnexpectedToken(_token),
+            };
         }
 
 

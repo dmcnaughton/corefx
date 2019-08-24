@@ -15,7 +15,7 @@ namespace System.Diagnostics.PerformanceData
     /// </summary>
     public sealed class CounterData
     {
-        private unsafe long* _offset;
+        private readonly unsafe long* _offset;
 
         /// <summary>
         /// CounterData constructor
@@ -103,7 +103,7 @@ namespace System.Diagnostics.PerformanceData
     public sealed class CounterSetInstanceCounterDataSet : IDisposable
     {
         internal CounterSetInstance _instance;
-        private Dictionary<int, CounterData> _counters;
+        private readonly Dictionary<int, CounterData> _counters;
         private int _disposed;
         internal unsafe byte* _dataBlock;
 
@@ -149,14 +149,12 @@ namespace System.Diagnostics.PerformanceData
                         Dispose(true);
 
                         // ERROR_INVALID_PARAMETER or ERROR_NOT_FOUND
-                        switch (Status)
+                        throw Status switch
                         {
-                            case (uint)Interop.Errors.ERROR_NOT_FOUND:
-                                throw new InvalidOperationException(SR.Format(SR.Perflib_InvalidOperation_CounterRefValue, _instance._counterSet._counterSet, CounterDef.Key, _instance._instName));
+                            (uint)Interop.Errors.ERROR_NOT_FOUND => new InvalidOperationException(SR.Format(SR.Perflib_InvalidOperation_CounterRefValue, _instance._counterSet._counterSet, CounterDef.Key, _instance._instName)),
 
-                            default:
-                                throw new Win32Exception((int)Status);
-                        }
+                            _ => new Win32Exception((int)Status),
+                        };
                     }
                     CounterOffset++;
                 }

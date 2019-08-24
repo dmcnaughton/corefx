@@ -70,12 +70,12 @@ namespace System.Linq
             {
                 Debug.Assert(index >= 0 && index <= 2);
 
-                switch (index)
+                return index switch
                 {
-                    case 0: return _first;
-                    case 1: return _second;
-                    default: return null;
-                }
+                    0 => _first,
+                    1 => _second,
+                    _ => null,
+                };
             }
         }
 
@@ -150,7 +150,7 @@ namespace System.Linq
                 {
                     // In the unlikely case of this many concatenations, if we produced a ConcatNIterator
                     // with int.MaxValue then state would overflow before it matched its index.
-                    // So we use the naïve approach of just having a left and right sequence.
+                    // So we use the naive approach of just having a left and right sequence.
                     return new Concat2Iterator<TSource>(this, next);
                 }
 

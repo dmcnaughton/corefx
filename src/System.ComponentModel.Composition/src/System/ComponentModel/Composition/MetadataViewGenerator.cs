@@ -59,20 +59,20 @@ namespace System.ComponentModel.Composition
     {
         public delegate object MetadataViewFactory(IDictionary<string, object> metadata);
 
-        public const string MetadataViewType       = "MetadataViewType";
-        public const string MetadataItemKey        = "MetadataItemKey";
-        public const string MetadataItemTargetType = "MetadataItemTargetType";
-        public const string MetadataItemSourceType = "MetadataItemSourceType";
-        public const string MetadataItemValue      = "MetadataItemValue";
-        public const string MetadataViewFactoryName= "Create";
+        public const string MetadataViewType        = "MetadataViewType";
+        public const string MetadataItemKey         = "MetadataItemKey";
+        public const string MetadataItemTargetType  = "MetadataItemTargetType";
+        public const string MetadataItemSourceType  = "MetadataItemSourceType";
+        public const string MetadataItemValue       = "MetadataItemValue";
+        public const string MetadataViewFactoryName = "Create";
 
-        private static Lock _lock = new Lock();
-        private static Dictionary<Type, MetadataViewFactory> _metadataViewFactories = new Dictionary<Type, MetadataViewFactory>();
-        private static AssemblyName ProxyAssemblyName = new AssemblyName(string.Format(CultureInfo.InvariantCulture, "MetadataViewProxies_{0}", Guid.NewGuid()));
-        private static ModuleBuilder    transparentProxyModuleBuilder;
+        private static readonly Lock _lock = new Lock();
+        private static readonly Dictionary<Type, MetadataViewFactory> _metadataViewFactories = new Dictionary<Type, MetadataViewFactory>();
+        private static readonly AssemblyName ProxyAssemblyName = new AssemblyName(string.Format(CultureInfo.InvariantCulture, "MetadataViewProxies_{0}", Guid.NewGuid()));
+        private static ModuleBuilder transparentProxyModuleBuilder;
 
-        private static Type[] CtorArgumentTypes = new Type[] { typeof(IDictionary<string, object>) };
-        private static MethodInfo _mdvDictionaryTryGet = CtorArgumentTypes[0].GetMethod("TryGetValue");
+        private static readonly Type[] CtorArgumentTypes = new Type[] { typeof(IDictionary<string, object>) };
+        private static readonly MethodInfo _mdvDictionaryTryGet = CtorArgumentTypes[0].GetMethod("TryGetValue");
         private static readonly MethodInfo ObjectGetType = typeof(object).GetMethod("GetType", Type.EmptyTypes);
         private static readonly ConstructorInfo ObjectCtor = typeof(object).GetConstructor(Type.EmptyTypes);
 

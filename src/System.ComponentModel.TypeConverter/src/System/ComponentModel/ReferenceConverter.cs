@@ -17,7 +17,7 @@ namespace System.ComponentModel
     public class ReferenceConverter : TypeConverter
     {
         private static readonly string s_none = SR.toStringNone;
-        private Type _type;
+        private readonly Type _type;
 
         /// <summary>
         /// Initializes a new instance of the <see cref='System.ComponentModel.ReferenceConverter'/> class.
@@ -94,7 +94,7 @@ namespace System.ComponentModel
                 if (value != null)
                 {
                     // Try the reference service first.
-                    IReferenceService refSvc = (IReferenceService) context?.GetService(typeof(IReferenceService));
+                    IReferenceService refSvc = (IReferenceService)context?.GetService(typeof(IReferenceService));
                     if (refSvc != null)
                     {
                         string name = refSvc.GetName(value);
@@ -198,7 +198,7 @@ namespace System.ComponentModel
         /// </summary>
         private class ReferenceComparer : IComparer
         {
-            private ReferenceConverter _converter;
+            private readonly ReferenceConverter _converter;
 
             public ReferenceComparer(ReferenceConverter converter)
             {

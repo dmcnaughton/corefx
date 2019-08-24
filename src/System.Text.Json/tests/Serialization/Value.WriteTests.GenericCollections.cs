@@ -838,9 +838,26 @@ namespace System.Text.Json.Serialization.Tests
                 KvpWClassKvpVal = new KeyValuePair<string, KeyValuePair<string, SimpleClassWithKeyValuePairs>>("key", new KeyValuePair<string, SimpleClassWithKeyValuePairs>("key", null)),
             };
 
-            string expectedJson = @"{""KvpWStrVal"":{""Key"":""key"",""Value"":null},""KvpWObjVal"":{""Key"":""key"",""Value"":null},""KvpWClassVal"":{""Key"":""key"",""Value"":null},""KvpWStrKvpVal"":{""Key"":""key"",""Value"":{""Key"":""key"",""Value"":null}},""KvpWObjKvpVal"":{""Key"":""key"",""Value"":{""Key"":""key"",""Value"":null}},""KvpWClassKvpVal"":{""Key"":""key"",""Value"":{""Key"":""key"",""Value"":null}}}";
             string result = JsonSerializer.Serialize(value);
-            Assert.Equal(expectedJson, result);
+
+            // Roundtrip to ensure serialize was correct.
+            value = JsonSerializer.Deserialize<SimpleClassWithKeyValuePairs>(result);
+            Assert.Equal("key", value.KvpWStrVal.Key);
+            Assert.Equal("key", value.KvpWObjVal.Key);
+            Assert.Equal("key", value.KvpWClassVal.Key);
+            Assert.Equal("key", value.KvpWStrKvpVal.Key);
+            Assert.Equal("key", value.KvpWObjKvpVal.Key);
+            Assert.Equal("key", value.KvpWClassKvpVal.Key);
+            Assert.Equal("key", value.KvpWStrKvpVal.Value.Key);
+            Assert.Equal("key", value.KvpWObjKvpVal.Value.Key);
+            Assert.Equal("key", value.KvpWClassKvpVal.Value.Key);
+
+            Assert.Null(value.KvpWStrVal.Value);
+            Assert.Null(value.KvpWObjVal.Value);
+            Assert.Null(value.KvpWClassVal.Value);
+            Assert.Null(value.KvpWStrKvpVal.Value.Value);
+            Assert.Null(value.KvpWObjKvpVal.Value.Value);
+            Assert.Null(value.KvpWClassKvpVal.Value.Value);
         }
 
         [Fact]
@@ -874,6 +891,17 @@ namespace System.Text.Json.Serialization.Tests
             Assert.Equal(SimpleTestClassWithStringToStringIReadOnlyDictionaryWrapper.s_json.StripWhitespace(), JsonSerializer.Serialize<object>(obj5));
         }
 
+        [Fact]
+        // Regression test for https://github.com/dotnet/corefx/issues/39770.
+        public static void ConvertIEnumerableValueTypesThenSerialize()
+        {
+            IEnumerable<ValueA> valueAs = Enumerable.Range(0, 5).Select(x => new ValueA { Value = x }).ToList();
+            IEnumerable<ValueB> valueBs = valueAs.Select(x => new ValueB { Value = x.Value });
+
+            string expectedJson = @"[{""Value"":0},{""Value"":1},{""Value"":2},{""Value"":3},{""Value"":4}]";
+            Assert.Equal(expectedJson, JsonSerializer.Serialize<IEnumerable<ValueB>>(valueBs));
+        }
+
         public class SimpleClassWithKeyValuePairs
         {
             public KeyValuePair<string, string> KvpWStrVal { get; set; }
@@ -882,6 +910,16 @@ namespace System.Text.Json.Serialization.Tests
             public KeyValuePair<string, KeyValuePair<string, string>> KvpWStrKvpVal { get; set; }
             public KeyValuePair<string, KeyValuePair<string, object>> KvpWObjKvpVal { get; set; }
             public KeyValuePair<string, KeyValuePair<string, SimpleClassWithKeyValuePairs>> KvpWClassKvpVal { get; set; }
+        }
+
+        public class ValueA
+        {
+            public int Value { get; set; }
+        }
+
+        public class ValueB
+        {
+            public int Value { get; set; }
         }
     }
 }

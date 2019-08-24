@@ -41,13 +41,13 @@ namespace System.DirectoryServices.ActiveDirectory
 
     internal sealed class Utils
     {
-        private static int s_LOGON32_LOGON_NEW_CREDENTIALS = 9;
-        private static int s_LOGON32_PROVIDER_WINNT50 = 3;
-        private static int s_POLICY_VIEW_LOCAL_INFORMATION = 0x00000001;
-        private static uint s_STANDARD_RIGHTS_REQUIRED = 0x000F0000;
-        private static uint s_SYNCHRONIZE = 0x00100000;
-        private static uint s_THREAD_ALL_ACCESS = s_STANDARD_RIGHTS_REQUIRED | s_SYNCHRONIZE | 0x3FF;
-        internal static AuthenticationTypes DefaultAuthType = AuthenticationTypes.Secure | AuthenticationTypes.Signing | AuthenticationTypes.Sealing;
+        private const int LOGON32_LOGON_NEW_CREDENTIALS = 9;
+        private const int LOGON32_PROVIDER_WINNT50 = 3;
+        private const int POLICY_VIEW_LOCAL_INFORMATION = 0x00000001;
+        private const uint STANDARD_RIGHTS_REQUIRED = 0x000F0000;
+        private const uint SYNCHRONIZE = 0x00100000;
+        private const uint THREAD_ALL_ACCESS = STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | 0x3FF;
+        internal const AuthenticationTypes DefaultAuthType = AuthenticationTypes.Secure | AuthenticationTypes.Signing | AuthenticationTypes.Sealing;
 
         /*
 
@@ -79,18 +79,18 @@ namespace System.DirectoryServices.ActiveDirectory
                                                     SORT_STRINGSORT )
 
         */
-        private static uint s_LANG_ENGLISH = 0x09;
-        private static uint s_SUBLANG_ENGLISH_US = 0x01;
-        private static uint s_SORT_DEFAULT = 0x0;
-        private static uint s_LANGID = ((uint)((((ushort)(s_SUBLANG_ENGLISH_US)) << 10) | (ushort)(s_LANG_ENGLISH)));
-        private static uint s_LCID = ((uint)((((uint)((ushort)(s_SORT_DEFAULT))) << 16) | ((uint)((ushort)(s_LANGID)))));
+        private const uint LANG_ENGLISH = 0x09;
+        private const uint SUBLANG_ENGLISH_US = 0x01;
+        private const uint SORT_DEFAULT = 0x0;
+        private const uint LANGID = ((uint)((((ushort)(SUBLANG_ENGLISH_US)) << 10) | (ushort)(LANG_ENGLISH)));
+        private const uint LCID = ((uint)((((uint)((ushort)(SORT_DEFAULT))) << 16) | ((uint)((ushort)(LANGID)))));
 
-        internal static uint NORM_IGNORECASE = 0x00000001;
-        internal static uint NORM_IGNORENONSPACE = 0x00000002;
-        internal static uint NORM_IGNOREKANATYPE = 0x00010000;
-        internal static uint NORM_IGNOREWIDTH = 0x00020000;
-        internal static uint SORT_STRINGSORT = 0x00001000;
-        internal static uint DEFAULT_CMP_FLAGS = NORM_IGNORECASE |
+        internal const uint NORM_IGNORECASE = 0x00000001;
+        internal const uint NORM_IGNORENONSPACE = 0x00000002;
+        internal const uint NORM_IGNOREKANATYPE = 0x00010000;
+        internal const uint NORM_IGNOREWIDTH = 0x00020000;
+        internal const uint SORT_STRINGSORT = 0x00001000;
+        internal const uint DEFAULT_CMP_FLAGS = NORM_IGNORECASE |
                                                 NORM_IGNOREKANATYPE |
                                                 NORM_IGNORENONSPACE |
                                                 NORM_IGNOREWIDTH |
@@ -310,7 +310,7 @@ namespace System.DirectoryServices.ActiveDirectory
             {
                 if (resCol.Count != 2)
                 {
-                    throw new ActiveDirectoryOperationException(SR.Format(SR.NoHostNameOrPortNumber , dn));
+                    throw new ActiveDirectoryOperationException(SR.Format(SR.NoHostNameOrPortNumber, dn));
                 }
 
                 foreach (SearchResult res in resCol)
@@ -336,7 +336,7 @@ namespace System.DirectoryServices.ActiveDirectory
 
             if ((ldapPort == -1) || (dnsHostName == null))
             {
-                throw new ActiveDirectoryOperationException(SR.Format(SR.NoHostNameOrPortNumber , dn));
+                throw new ActiveDirectoryOperationException(SR.Format(SR.NoHostNameOrPortNumber, dn));
             }
 
             return dnsHostName + ":" + ldapPort;
@@ -369,7 +369,7 @@ namespace System.DirectoryServices.ActiveDirectory
             {
                 if (resCol.Count != 2)
                 {
-                    throw new ActiveDirectoryOperationException(SR.Format(SR.NoHostNameOrPortNumber , dn));
+                    throw new ActiveDirectoryOperationException(SR.Format(SR.NoHostNameOrPortNumber, dn));
                 }
 
                 foreach (SearchResult res in resCol)
@@ -396,7 +396,7 @@ namespace System.DirectoryServices.ActiveDirectory
 
             if ((ldapPort == -1) || (sslPort == -1) || (dnsHostName == null))
             {
-                throw new ActiveDirectoryOperationException(SR.Format(SR.NoHostNameOrPortNumber , dn));
+                throw new ActiveDirectoryOperationException(SR.Format(SR.NoHostNameOrPortNumber, dn));
             }
 
             return dnsHostName + ":" + ldapPort + ":" + sslPort;
@@ -803,7 +803,7 @@ namespace System.DirectoryServices.ActiveDirectory
                 return ActiveDirectoryTransportType.Smtp;
             else
             {
-                string message = SR.Format(SR.UnknownTransport , transportName);
+                string message = SR.Format(SR.UnknownTransport, transportName);
                 throw new ActiveDirectoryOperationException(message);
             }
         }
@@ -929,7 +929,7 @@ namespace System.DirectoryServices.ActiveDirectory
 
             Utils.GetDomainAndUsername(context, out userName, out domainName);
 
-            int result = UnsafeNativeMethods.LogonUserW(userName, domainName, context.Password, s_LOGON32_LOGON_NEW_CREDENTIALS, s_LOGON32_PROVIDER_WINNT50, ref hToken);
+            int result = UnsafeNativeMethods.LogonUserW(userName, domainName, context.Password, LOGON32_LOGON_NEW_CREDENTIALS, LOGON32_PROVIDER_WINNT50, ref hToken);
             // check the result
             if (result == 0)
                 throw ExceptionHelper.GetExceptionFromErrorCode(Marshal.GetLastWin32Error());
@@ -955,7 +955,7 @@ namespace System.DirectoryServices.ActiveDirectory
         internal static void ImpersonateAnonymous()
         {
             IntPtr hThread = (IntPtr)0;
-            hThread = UnsafeNativeMethods.OpenThread(s_THREAD_ALL_ACCESS, false, UnsafeNativeMethods.GetCurrentThreadId());
+            hThread = UnsafeNativeMethods.OpenThread(THREAD_ALL_ACCESS, false, UnsafeNativeMethods.GetCurrentThreadId());
             if (hThread == (IntPtr)0)
                 throw ExceptionHelper.GetExceptionFromErrorCode(Marshal.GetLastWin32Error());
 
@@ -1046,7 +1046,7 @@ namespace System.DirectoryServices.ActiveDirectory
             LSA_OBJECT_ATTRIBUTES objectAttribute = new LSA_OBJECT_ATTRIBUTES();
             IntPtr target = (IntPtr)0;
 
-            int mask = s_POLICY_VIEW_LOCAL_INFORMATION;
+            int mask = POLICY_VIEW_LOCAL_INFORMATION;
 
             systemName = new LSA_UNICODE_STRING();
             target = Marshal.StringToHGlobalUni(serverName);
@@ -1735,11 +1735,11 @@ namespace System.DirectoryServices.ActiveDirectory
                     Debug.Fail($"ConfigurationSet::GetReplicaList - no dnsHostName information for replica {ntdsaName}");
                     if (isADAM)
                     {
-                        throw new ActiveDirectoryOperationException(SR.Format(SR.NoHostNameOrPortNumber , ntdsaName));
+                        throw new ActiveDirectoryOperationException(SR.Format(SR.NoHostNameOrPortNumber, ntdsaName));
                     }
                     else
                     {
-                        throw new ActiveDirectoryOperationException(SR.Format(SR.NoHostName , ntdsaName));
+                        throw new ActiveDirectoryOperationException(SR.Format(SR.NoHostName, ntdsaName));
                     }
                 }
 
@@ -1748,7 +1748,7 @@ namespace System.DirectoryServices.ActiveDirectory
                     if (serverPorts[ntdsaName] == null)
                     {
                         Debug.Fail($"ConfigurationSet::GetReplicaList - no port number  information for replica {ntdsaName}");
-                        throw new ActiveDirectoryOperationException(SR.Format(SR.NoHostNameOrPortNumber , ntdsaName));
+                        throw new ActiveDirectoryOperationException(SR.Format(SR.NoHostNameOrPortNumber, ntdsaName));
                     }
                 }
 
@@ -1866,7 +1866,7 @@ namespace System.DirectoryServices.ActiveDirectory
                 lpString2 = Marshal.StringToHGlobalUni(s2);
                 cchCount2 = s2.Length;
 
-                result = NativeMethods.CompareString(s_LCID, compareFlags, lpString1, cchCount1, lpString2, cchCount2);
+                result = NativeMethods.CompareString(LCID, compareFlags, lpString1, cchCount1, lpString2, cchCount2);
                 if (result == 0)
                 {
                     throw ExceptionHelper.GetExceptionFromErrorCode(Marshal.GetLastWin32Error());
@@ -1941,7 +1941,7 @@ namespace System.DirectoryServices.ActiveDirectory
                 if (serverName.EndsWith("]"))
                 {
                     //[IPv6]
-                    serverName = serverName.Substring(1, serverName.Length - 2);//2 for []
+                    serverName = serverName.Substring(1, serverName.Length - 2); //2 for []
                     return serverName;
                 }
                 int closingBrace = serverName.LastIndexOf("]:");
@@ -2294,19 +2294,12 @@ namespace System.DirectoryServices.ActiveDirectory
                 return SidType.FakeObject;
             }
 
-            switch (rid)
+            return rid switch
             {
-                case 21:
-                    // Account SID
-                    return SidType.RealObject;
-
-                case 32:
-                    // BUILTIN SID
-                    return SidType.RealObjectFakeDomain;
-
-                default:
-                    return SidType.FakeObject;
-            }
+                21 => SidType.RealObject, // Account SID
+                32 => SidType.RealObjectFakeDomain, // BUILTIN SID
+                _ => SidType.FakeObject,
+            };
         }
 
 

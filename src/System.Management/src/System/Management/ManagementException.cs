@@ -589,8 +589,8 @@ namespace System.Management
     [Serializable]
     public class ManagementException : SystemException
     {
-        private ManagementBaseObject errorObject = null;
-        private ManagementStatus     errorCode = 0;
+        private readonly ManagementBaseObject errorObject = null;
+        private readonly ManagementStatus     errorCode = 0;
 
         internal static void ThrowWithExtendedInfo(ManagementStatus errorCode)
         {
@@ -703,7 +703,7 @@ namespace System.Management
         /// parameter is not a null reference (Nothing in Visual Basic), the current exception is raised in a catch
         /// block that handles the inner exception.</param>
         /// </summary>
-        public ManagementException(string message,Exception innerException):this(innerException, message, null)
+        public ManagementException(string message, Exception innerException):this(innerException, message, null)
         {
             // if the exception passed is not a ManagementException, then initialize the ErrorCode to Failed
             if (!(innerException is ManagementException))

@@ -85,7 +85,7 @@ namespace System.Data
             public int GetHashCode(DataRow obj) => obj._objectID;
         }
 
-        private DataViewListener _dvListener = null;
+        private readonly DataViewListener _dvListener = null;
 
         private static int s_objectTypeCount; // Bid counter
         private readonly int _objectID = System.Threading.Interlocked.Increment(ref s_objectTypeCount);
@@ -757,7 +757,7 @@ namespace System.Data
         }
 
         /// <summary>This method exists for LinqDataView to keep a level of abstraction away from the RBTree</summary>
-        internal Range FindRecords<TKey,TRow>(Index.ComparisonBySelector<TKey,TRow> comparison, TKey key) where TRow:DataRow
+        internal Range FindRecords<TKey, TRow>(Index.ComparisonBySelector<TKey, TRow> comparison, TKey key) where TRow : DataRow
         {
             return _index.FindRecords(comparison, key);
         }

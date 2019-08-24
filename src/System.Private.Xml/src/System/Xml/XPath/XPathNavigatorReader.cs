@@ -30,7 +30,7 @@ namespace System.Xml.XPath
         }
 
         private XPathNavigator _nav;
-        private XPathNavigator _navToRead;
+        private readonly XPathNavigator _navToRead;
         private int _depth;
         private State _state;
         private XmlNodeType _nodeType;
@@ -658,7 +658,7 @@ namespace System.Xml.XPath
                         else
                         {
                             XPathNavigator prev = nav.Clone();
-                            for (;;)
+                            while (true)
                             {
                                 if (!nav.MoveToNextNamespace(XPathNamespaceScope.Local))
                                 {

@@ -24,7 +24,7 @@ namespace System.Diagnostics
         internal const string SingleInstanceName = "systemdiagnosticssharedsingleinstance";
         internal const string DefaultFileMappingName = "netfxcustomperfcounters.1.0";
         internal static readonly int s_singleInstanceHashCode = GetWstrHashCode(SingleInstanceName);
-        private static Hashtable s_categoryDataTable = new Hashtable(StringComparer.Ordinal);
+        private static readonly Hashtable s_categoryDataTable = new Hashtable(StringComparer.Ordinal);
         private static readonly int s_categoryEntrySize = Marshal.SizeOf(typeof(CategoryEntry));
         private static readonly int s_instanceEntrySize = Marshal.SizeOf(typeof(InstanceEntry));
         private static readonly int s_counterEntrySize = Marshal.SizeOf(typeof(CounterEntry));
@@ -78,11 +78,11 @@ namespace System.Diagnostics
         // category, we can fix this and always use an inital offset of 8.
         internal int _initialOffset = 4;
 
-        private CategoryData _categoryData;
+        private readonly CategoryData _categoryData;
         private long _baseAddress;
-        private unsafe CounterEntry* _counterEntryPointer;
-        private string _categoryName;
-        private int _categoryNameHashCode;
+        private readonly unsafe CounterEntry* _counterEntryPointer;
+        private readonly string _categoryName;
+        private readonly int _categoryNameHashCode;
         private int _thisInstanceOffset = -1;
 
         internal SharedPerformanceCounter(string catName, string counterName, string instanceName) :
@@ -901,7 +901,7 @@ namespace System.Diagnostics
             CategoryEntry* currentCategoryPointer = firstCategoryPointer;
             CategoryEntry* previousCategoryPointer = firstCategoryPointer;
 
-            for (; ; )
+            while (true)
             {
                 if (currentCategoryPointer->IsConsistent == 0)
                     Verify(currentCategoryPointer);
@@ -930,7 +930,7 @@ namespace System.Diagnostics
         {
             CounterEntry* currentCounterPointer = (CounterEntry*)(ResolveOffset(instancePointer->FirstCounterOffset, s_counterEntrySize));
             CounterEntry* previousCounterPointer = currentCounterPointer;
-            for (; ; )
+            while (true)
             {
                 if (currentCounterPointer->CounterNameHashCode == counterNameHashCode)
                 {
@@ -1006,7 +1006,7 @@ namespace System.Diagnostics
 
             try
             {
-                for (; ; )
+                while (true)
                 {
                     bool verifiedLifetimeOfThisInstance = false;
                     if (verifyLifeTime && (currentInstancePointer->RefCount != 0))
@@ -1116,7 +1116,7 @@ namespace System.Diagnostics
             // 2nd pass find a free instance slot
             InstanceEntry* currentInstancePointer = (InstanceEntry*)(ResolveOffset(categoryPointer->FirstInstanceOffset, s_instanceEntrySize));
             InstanceEntry* previousInstancePointer = currentInstancePointer;
-            for (; ; )
+            while (true)
             {
                 if (currentInstancePointer->RefCount == 0)
                 {
@@ -1404,7 +1404,7 @@ namespace System.Diagnostics
             try
             {
                 NetFrameworkUtils.EnterMutexWithoutGlobal(_categoryData.MutexName, ref mutex);
-                for (; ; )
+                while (true)
                 {
                     RemoveOneInstance(instancePointer, true);
 

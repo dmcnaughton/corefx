@@ -17,11 +17,11 @@ namespace System.ComponentModel.Composition.Hosting
         private List<ComposablePart> _parts = new List<ComposablePart>();
         private volatile bool _isDisposed = false;
         private volatile bool _isRunning = false;
-        private CompositionLock _lock = null;
+        private readonly CompositionLock _lock = null;
         private ExportProvider _sourceProvider;
         private ImportEngine _importEngine;
         private volatile bool _currentlyComposing;
-        private CompositionOptions _compositionOptions;
+        private readonly CompositionOptions _compositionOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ComposablePartExportProvider"/> class.
@@ -32,7 +32,7 @@ namespace System.ComponentModel.Composition.Hosting
         }
 
         public ComposablePartExportProvider(bool isThreadSafe)
-            :this(isThreadSafe ? CompositionOptions.IsThreadSafe : CompositionOptions.Default)
+            : this(isThreadSafe ? CompositionOptions.IsThreadSafe : CompositionOptions.Default)
         {
         }
 
@@ -180,7 +180,7 @@ namespace System.ComponentModel.Composition.Hosting
             }
         }
 
-/// <summary>
+        /// <summary>
         /// Returns all exports that match the conditions of the specified import.
         /// </summary>
         /// <param name="definition">The <see cref="ImportDefinition"/> that defines the conditions of the

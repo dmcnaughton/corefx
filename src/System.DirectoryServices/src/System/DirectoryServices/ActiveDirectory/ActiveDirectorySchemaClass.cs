@@ -18,8 +18,8 @@ namespace System.DirectoryServices.ActiveDirectory
         private DirectoryEntry _classEntry = null;
         private DirectoryEntry _schemaEntry = null;
         private DirectoryEntry _abstractClassEntry = null;
-        private NativeComInterfaces.IAdsClass _iadsClass = null;
-        private DirectoryContext _context = null;
+        private readonly NativeComInterfaces.IAdsClass _iadsClass = null;
+        private readonly DirectoryContext _context = null;
         internal bool isBound = false;
         private bool _disposed = false;
         private ActiveDirectorySchema _schema = null;
@@ -28,7 +28,7 @@ namespace System.DirectoryServices.ActiveDirectory
         private Hashtable _propertyValuesFromServer = null;
 
         // private variables for all the properties of this class
-        private string _ldapDisplayName = null;
+        private readonly string _ldapDisplayName = null;
         private string _commonName = null;
         private string _oid = null;
         private string _description = null;
@@ -129,7 +129,7 @@ namespace System.DirectoryServices.ActiveDirectory
             catch (ActiveDirectoryObjectNotFoundException)
             {
                 // this is the case where the context is a config set and we could not find an ADAM instance in that config set
-                throw new ActiveDirectoryOperationException(SR.Format(SR.ADAMInstanceNotFoundInConfigSet , context.Name));
+                throw new ActiveDirectoryOperationException(SR.Format(SR.ADAMInstanceNotFoundInConfigSet, context.Name));
             }
 
             // set the bind flag
@@ -306,7 +306,7 @@ namespace System.DirectoryServices.ActiveDirectory
                 catch (ActiveDirectoryObjectNotFoundException)
                 {
                     // this is the case where the context is a config set and we could not find an ADAM instance in that config set
-                    throw new ActiveDirectoryOperationException(SR.Format(SR.ADAMInstanceNotFoundInConfigSet , _context.Name));
+                    throw new ActiveDirectoryOperationException(SR.Format(SR.ADAMInstanceNotFoundInConfigSet, _context.Name));
                 }
 
                 // set the ldap display name property
@@ -1096,7 +1096,7 @@ namespace System.DirectoryServices.ActiveDirectory
             Debug.Assert(values != null);
             if (values.Count < 1 && mustExist)
             {
-                throw new ActiveDirectoryOperationException(SR.Format(SR.PropertyNotFound , propertyName));
+                throw new ActiveDirectoryOperationException(SR.Format(SR.PropertyNotFound, propertyName));
             }
             else if (values.Count > 0)
             {

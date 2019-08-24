@@ -63,7 +63,7 @@ namespace System.Data
         //default remoting format is XML
         private SerializationFormat _remotingFormat = SerializationFormat.Xml;
 
-        private object _defaultViewManagerLock = new object();
+        private readonly object _defaultViewManagerLock = new object();
 
         private static int s_objectTypeCount; // Bid counter
         private readonly int _objectID = Interlocked.Increment(ref s_objectTypeCount);
@@ -1127,7 +1127,7 @@ namespace System.Data
                         ForeignKeyConstraint foreign = constraints[j] as ForeignKeyConstraint;
                         if (foreign.Table == foreign.RelatedTable)
                         {
-                            continue;// we have already added this foreign key in while cloning the datatable
+                            continue; // we have already added this foreign key in while cloning the datatable
                         }
 
                         ds.Tables[i].Constraints.Add(constraints[j].Clone(ds));
@@ -1237,7 +1237,7 @@ namespace System.Data
 
         private struct TableChanges
         {
-            private BitArray _rowChanges;
+            private readonly BitArray _rowChanges;
 
             internal TableChanges(int rowCount)
             {

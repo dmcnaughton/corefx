@@ -33,7 +33,7 @@ namespace System.Xml.Serialization
         private Hashtable _typeEntries;
         private ArrayList _referencesToWrite;
         private Hashtable _objectsInUse;
-        private string _aliasBase = "q";
+        private readonly string _aliasBase = "q";
         private bool _soap12;
         private bool _escapeName = true;
 
@@ -1432,9 +1432,9 @@ namespace System.Xml.Serialization
 
     internal static class DynamicAssemblies
     {
-        private static volatile Hashtable s_nameToAssemblyMap = new Hashtable();
-        private static volatile Hashtable s_assemblyToNameMap = new Hashtable();
-        private static Hashtable s_tableIsTypeDynamic = Hashtable.Synchronized(new Hashtable());
+        private static readonly Hashtable s_nameToAssemblyMap = new Hashtable();
+        private static readonly Hashtable s_assemblyToNameMap = new Hashtable();
+        private static readonly Hashtable s_tableIsTypeDynamic = Hashtable.Synchronized(new Hashtable());
 
         // SxS: This method does not take any resource name and does not expose any resources to the caller.
         // It's OK to suppress the SxS warning.
@@ -1521,7 +1521,7 @@ namespace System.Xml.Serialization
 
         internal static string GetName(Assembly a)
         {
-            return s_assemblyToNameMap != null ? (string) s_assemblyToNameMap[a] : null;
+            return s_assemblyToNameMap != null ? (string)s_assemblyToNameMap[a] : null;
         }
     }
 
@@ -1547,7 +1547,7 @@ namespace System.Xml.Serialization
         // ----------------------------------------------------------------------------------
         private Hashtable _reflectionVariables = null;
         private int _nextReflectionVariableNumber = 0;
-        private IndentedWriter _writer;
+        private readonly IndentedWriter _writer;
         internal ReflectionAwareCodeGen(IndentedWriter writer)
         {
             _writer = writer;
@@ -1627,10 +1627,9 @@ namespace System.Xml.Serialization
             if (_reflectionVariables == null)
             {
                 _reflectionVariables = new Hashtable();
-                _writer.Write(string.Format(CultureInfo.InvariantCulture, s_helperClassesForUseReflection,
+                _writer.Write(string.Format(CultureInfo.InvariantCulture, HelperClassesForUseReflection,
                     "object", "string", typeof(Type).FullName,
-                    typeof(FieldInfo).FullName, typeof(PropertyInfo).FullName,
-                    typeof(MemberInfo).FullName /*, typeof(MemberTypes).FullName*/));
+                    typeof(FieldInfo).FullName, typeof(PropertyInfo).FullName));
 
                 WriteDefaultIndexerInit(typeof(IList), typeof(Array).FullName, false, false);
             }
@@ -2132,7 +2131,7 @@ namespace System.Xml.Serialization
             WriteQuotedCSharpString(_writer, value);
         }
 
-        private static string s_helperClassesForUseReflection = @"
+        private const string HelperClassesForUseReflection = @"
     sealed class XSFieldInfo {{
        {3} fieldInfo;
         public XSFieldInfo({2} t, {1} memberName){{
@@ -2337,8 +2336,8 @@ namespace System.Xml.Serialization
             string methodName = ReferenceMapping(mapping);
 
 #if DEBUG
-                // use exception in the place of Debug.Assert to avoid throwing asserts from a server process such as aspnet_ewp.exe
-                if (methodName == null) throw new InvalidOperationException(SR.Format(SR.XmlInternalErrorMethod, mapping.TypeDesc.Name) + Environment.StackTrace);
+            // use exception in the place of Debug.Assert to avoid throwing asserts from a server process such as aspnet_ewp.exe
+            if (methodName == null) throw new InvalidOperationException(SR.Format(SR.XmlInternalErrorMethod, mapping.TypeDesc.Name) + Environment.StackTrace);
 #endif
 
             Writer.Write(methodName);
@@ -2384,8 +2383,8 @@ namespace System.Xml.Serialization
                 if (mapping is EnumMapping)
                 {
 #if DEBUG
-                        // use exception in the place of Debug.Assert to avoid throwing asserts from a server process such as aspnet_ewp.exe
-                        if (defaultValue.GetType() != typeof(string)) throw new InvalidOperationException(SR.Format(SR.XmlInternalErrorDetails, name + " has invalid default type " + defaultValue.GetType().Name));
+                    // use exception in the place of Debug.Assert to avoid throwing asserts from a server process such as aspnet_ewp.exe
+                    if (defaultValue.GetType() != typeof(string)) throw new InvalidOperationException(SR.Format(SR.XmlInternalErrorDetails, name + " has invalid default type " + defaultValue.GetType().Name));
 #endif
 
                     Writer.Write("if (");
@@ -2685,8 +2684,8 @@ namespace System.Xml.Serialization
                     }
 
 #if DEBUG
-                        // use exception in the place of Debug.Assert to avoid throwing asserts from a server process such as aspnet_ewp.exe
-                        if (enumSource == null) throw new InvalidOperationException(SR.Format(SR.XmlInternalErrorDetails, "Can not find " + member.ChoiceIdentifier.MemberName + " in the members mapping."));
+                    // use exception in the place of Debug.Assert to avoid throwing asserts from a server process such as aspnet_ewp.exe
+                    if (enumSource == null) throw new InvalidOperationException(SR.Format(SR.XmlInternalErrorDetails, "Can not find " + member.ChoiceIdentifier.MemberName + " in the members mapping."));
 #endif
                 }
 
@@ -2912,8 +2911,8 @@ namespace System.Xml.Serialization
                 string methodName = ReferenceMapping(derived);
 
 #if DEBUG
-                    // use exception in the place of Debug.Assert to avoid throwing asserts from a server process such as aspnet_ewp.exe
-                    if (methodName == null) throw new InvalidOperationException("derived from " + mapping.TypeDesc.FullName + ", " + SR.Format(SR.XmlInternalErrorMethod, derived.TypeDesc.Name) + Environment.StackTrace);
+                // use exception in the place of Debug.Assert to avoid throwing asserts from a server process such as aspnet_ewp.exe
+                if (methodName == null) throw new InvalidOperationException("derived from " + mapping.TypeDesc.FullName + ", " + SR.Format(SR.XmlInternalErrorMethod, derived.TypeDesc.Name) + Environment.StackTrace);
 #endif
 
                 Writer.Write(methodName);
@@ -2950,8 +2949,8 @@ namespace System.Xml.Serialization
                         string methodName = ReferenceMapping(mapping);
 
 #if DEBUG
-                            // use exception in the place of Debug.Assert to avoid throwing asserts from a server process such as aspnet_ewp.exe
-                            if (methodName == null) throw new InvalidOperationException(SR.Format(SR.XmlInternalErrorMethod, mapping.TypeDesc.Name) + Environment.StackTrace);
+                        // use exception in the place of Debug.Assert to avoid throwing asserts from a server process such as aspnet_ewp.exe
+                        if (methodName == null) throw new InvalidOperationException(SR.Format(SR.XmlInternalErrorMethod, mapping.TypeDesc.Name) + Environment.StackTrace);
 #endif
                         Writer.WriteLine("Writer.WriteStartElement(n, ns);");
                         Writer.Write("WriteXsiType(");
@@ -4034,8 +4033,8 @@ namespace System.Xml.Serialization
                     string methodName = ReferenceMapping(mapping);
 
 #if DEBUG
-                        // use exception in the place of Debug.Assert to avoid throwing asserts from a server process such as aspnet_ewp.exe
-                        if (methodName == null) throw new InvalidOperationException(SR.Format(SR.XmlInternalErrorMethod, mapping.TypeDesc.Name) + Environment.StackTrace);
+                    // use exception in the place of Debug.Assert to avoid throwing asserts from a server process such as aspnet_ewp.exe
+                    if (methodName == null) throw new InvalidOperationException(SR.Format(SR.XmlInternalErrorMethod, mapping.TypeDesc.Name) + Environment.StackTrace);
 #endif
                     Writer.Write(methodName);
                     Writer.Write("(");
@@ -4143,7 +4142,7 @@ namespace System.Xml.Serialization
                 Writer.Write("!");
                 Writer.Write(source);
                 Writer.Write(".Equals(");
-                Type type= Type.GetType(mapping.TypeDesc.Type.FullName);
+                Type type = Type.GetType(mapping.TypeDesc.Type.FullName);
                 WriteValue(type != null ? Convert.ChangeType(value, type) : value);
                 Writer.Write(")");
             }

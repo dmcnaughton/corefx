@@ -565,7 +565,7 @@ namespace System.ComponentModel
             {
                 // Check our association table for a match.
                 Hashtable assocTable = AssociationTable;
-                IList associations = (IList) assocTable?[primary];
+                IList associations = (IList)assocTable?[primary];
                 if (associations != null)
                 {
                     lock (associations)
@@ -2401,7 +2401,7 @@ namespace System.ComponentModel
             }
 
             Hashtable assocTable = AssociationTable;
-            IList associations = (IList) assocTable?[primary];
+            IList associations = (IList)assocTable?[primary];
             if (associations != null)
             {
                 lock (associations)
@@ -2604,7 +2604,7 @@ namespace System.ComponentModel
 
                 if (!objectType.IsInstanceOfType(instance))
                 {
-                    throw new ArgumentException(SR.Format(SR.ConvertToException, nameof(objectType), instance.GetType()) , nameof(instance));
+                    throw new ArgumentException(SR.Format(SR.ConvertToException, nameof(objectType), instance.GetType()), nameof(instance));
                 }
 
                 return new ComNativeTypeDescriptor(Handler, instance);
@@ -2684,7 +2684,7 @@ namespace System.ComponentModel
         /// </summary>
         private sealed class AttributeProvider : TypeDescriptionProvider
         {
-            private Attribute[] _attrs;
+            private readonly Attribute[] _attrs;
 
             /// <summary>
             /// Creates a new attribute provider.
@@ -2707,7 +2707,7 @@ namespace System.ComponentModel
             /// </summary>
             private class AttributeTypeDescriptor : CustomTypeDescriptor
             {
-                private Attribute[] _attributeArray;
+                private readonly Attribute[] _attributeArray;
 
                 /// <summary>
                 /// Creates a new custom type descriptor that can merge

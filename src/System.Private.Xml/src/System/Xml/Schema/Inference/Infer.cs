@@ -108,12 +108,12 @@ namespace System.Xml.Schema
         private XmlSchema _rootSchema = null; //(XmlSchema) xsc[TargetNamespace];
         private XmlSchemaSet _schemaSet;
         private XmlReader _xtr;
-        private NameTable _nametable;
+        private readonly NameTable _nametable;
         private string _targetNamespace;
-        private XmlNamespaceManager _namespaceManager;
+        private readonly XmlNamespaceManager _namespaceManager;
         //private Hashtable schemas;    //contains collection of schemas before they get added to the XmlSchemaSet xsc
         //private bool bRefine = false; //indicates if we are going to infer or refine schema when InferSchema is called
-        private ArrayList _schemaList;
+        private readonly ArrayList _schemaList;
         private InferenceOption _occurrence = InferenceOption.Restricted;
         private InferenceOption _typeInference = InferenceOption.Restricted;
 
@@ -850,7 +850,7 @@ namespace System.Xml.Schema
                         {
                             //more than one consecutive text nodes probably with PI in between
                             xse.SchemaTypeName = ST_string;
-                            xse.LineNumber = TF_string;// we use LineNumber to store flags of valid types
+                            xse.LineNumber = TF_string; // we use LineNumber to store flags of valid types
                         }
                         else
                         {
@@ -864,7 +864,7 @@ namespace System.Xml.Schema
                                 else
                                 {
                                     xse.SchemaTypeName = ST_string;
-                                    xse.LineNumber = TF_string;// we use LineNumber to store flags of valid types
+                                    xse.LineNumber = TF_string; // we use LineNumber to store flags of valid types
                                 }
                             else if (_xtr.NodeType == XmlNodeType.Text)
                             {
@@ -887,7 +887,7 @@ namespace System.Xml.Schema
                             else
                             {
                                 xse.SchemaTypeName = ST_string;
-                                xse.LineNumber = TF_string;// we use LineNumber to store flags of valid types
+                                xse.LineNumber = TF_string; // we use LineNumber to store flags of valid types
                             }
                         }
                     }

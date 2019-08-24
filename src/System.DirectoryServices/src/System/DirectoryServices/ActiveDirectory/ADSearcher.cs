@@ -9,7 +9,7 @@ namespace System.DirectoryServices.ActiveDirectory
     internal class ADSearcher
     {
         private readonly DirectorySearcher _searcher = null;
-        private static TimeSpan s_defaultTimeSpan = new TimeSpan(0, 120, 0);
+        private static readonly TimeSpan s_defaultTimeSpan = new TimeSpan(0, 120, 0);
 
         public ADSearcher(DirectoryEntry searchRoot, string filter, string[] propertiesToLoad, SearchScope scope)
         {
@@ -38,7 +38,7 @@ namespace System.DirectoryServices.ActiveDirectory
                 _searcher.ServerPageTimeLimit = s_defaultTimeSpan;
             }
 
-             _searcher.CacheResults = cacheResults;
+            _searcher.CacheResults = cacheResults;
         }
 
         public SearchResult FindOne() => _searcher.FindOne();

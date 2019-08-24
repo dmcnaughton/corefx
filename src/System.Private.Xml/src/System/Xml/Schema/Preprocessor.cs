@@ -51,9 +51,9 @@ namespace System.Xml.Schema
         private Hashtable _schemaLocations;
         private Hashtable _chameleonSchemas;
 
-        private Hashtable _referenceNamespaces;
-        private Hashtable _processedExternals;
-        private SortedList _lockList;
+        private readonly Hashtable _referenceNamespaces;
+        private readonly Hashtable _processedExternals;
+        private readonly SortedList _lockList;
 
         private XmlReaderSettings _readerSettings;
 
@@ -394,7 +394,7 @@ namespace System.Xml.Schema
                             {
                                 Parser parser = new Parser(SchemaType.XSD, NameTable, SchemaNames, EventHandler);
                                 parser.Parse(reader, null);
-                                while (reader.Read()) ;// wellformness check
+                                while (reader.Read()) ; // wellformness check
                                 includedSchema = parser.XmlSchema;
                                 include.Schema = includedSchema;
                                 _schemaLocations.Add(ruri, includedSchema);

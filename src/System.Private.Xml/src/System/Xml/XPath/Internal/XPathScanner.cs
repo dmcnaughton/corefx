@@ -12,7 +12,7 @@ namespace MS.Internal.Xml.XPath
 {
     internal sealed class XPathScanner
     {
-        private string _xpathExpr;
+        private readonly string _xpathExpr;
         private int _xpathExprIndex;
         private LexKind _kind;
         private char _currentChar;
@@ -346,7 +346,7 @@ namespace MS.Internal.Xml.XPath
             int start = _xpathExprIndex - 1;
             int len = 0;
 
-            for (;;)
+            while (true)
             {
                 if (_xmlCharType.IsNCNameSingleChar(this.CurrentChar))
                 {

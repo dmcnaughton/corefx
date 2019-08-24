@@ -28,7 +28,7 @@ namespace System.ComponentModel.Composition.Hosting
 
         internal class NonImportSourceImportDefinition : ContractBasedImportDefinition
         {
-            private ContractBasedImportDefinition _sourceDefinition;
+            private readonly ContractBasedImportDefinition _sourceDefinition;
             private IDictionary<string, object> _metadata;
 
             public NonImportSourceImportDefinition(ContractBasedImportDefinition sourceDefinition)
@@ -53,7 +53,7 @@ namespace System.ComponentModel.Composition.Hosting
                     var reply = _metadata;
                     if (reply == null)
                     {
-                        reply = new Dictionary<string, object> (_sourceDefinition.Metadata);
+                        reply = new Dictionary<string, object>(_sourceDefinition.Metadata);
                         reply.Remove(CompositionConstants.ImportSourceMetadataName);
                         _metadata = reply;
                     }

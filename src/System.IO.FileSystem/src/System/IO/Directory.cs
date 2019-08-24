@@ -179,17 +179,13 @@ namespace System.IO
 
             FileSystemEnumerableFactory.NormalizeInputs(ref path, ref searchPattern, options.MatchType);
 
-            switch (searchTarget)
+            return searchTarget switch
             {
-                case SearchTarget.Files:
-                    return FileSystemEnumerableFactory.UserFiles(path, searchPattern, options);
-                case SearchTarget.Directories:
-                    return FileSystemEnumerableFactory.UserDirectories(path, searchPattern, options);
-                case SearchTarget.Both:
-                    return FileSystemEnumerableFactory.UserEntries(path, searchPattern, options);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(searchTarget));
-            }
+                SearchTarget.Files => FileSystemEnumerableFactory.UserFiles(path, searchPattern, options),
+                SearchTarget.Directories => FileSystemEnumerableFactory.UserDirectories(path, searchPattern, options),
+                SearchTarget.Both => FileSystemEnumerableFactory.UserEntries(path, searchPattern, options),
+                _ => throw new ArgumentOutOfRangeException(nameof(searchTarget)),
+            };
         }
 
         public static IEnumerable<string> EnumerateDirectories(string path) => EnumerateDirectories(path, "*", enumerationOptions: EnumerationOptions.Compatible);
@@ -223,7 +219,7 @@ namespace System.IO
             => EnumerateFileSystemEntries(path, searchPattern, EnumerationOptions.FromSearchOption(searchOption));
 
         public static IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
-            =>  InternalEnumeratePaths(path, searchPattern, SearchTarget.Both, enumerationOptions);
+            => InternalEnumeratePaths(path, searchPattern, SearchTarget.Both, enumerationOptions);
 
         public static string GetDirectoryRoot(string path)
         {

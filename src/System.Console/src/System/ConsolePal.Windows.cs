@@ -1030,7 +1030,7 @@ namespace System
                 }
 
                 // Try to give a better error message here
-               Interop.Kernel32.COORD bounds = Interop.Kernel32.GetLargestConsoleWindowSize(OutputHandle);
+                Interop.Kernel32.COORD bounds = Interop.Kernel32.GetLargestConsoleWindowSize(OutputHandle);
                 if (width > bounds.X)
                     throw new ArgumentOutOfRangeException(nameof(width), width, SR.Format(SR.ArgumentOutOfRange_ConsoleWindowSize_Size, bounds.X));
                 if (height > bounds.Y)
@@ -1267,7 +1267,7 @@ namespace System
         internal sealed class ControlCHandlerRegistrar
         {
             private bool _handlerRegistered;
-            private Interop.Kernel32.ConsoleCtrlHandlerRoutine _handler;
+            private readonly Interop.Kernel32.ConsoleCtrlHandlerRoutine _handler;
 
             internal ControlCHandlerRegistrar()
             {

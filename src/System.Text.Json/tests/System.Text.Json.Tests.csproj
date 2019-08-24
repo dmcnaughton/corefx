@@ -40,6 +40,7 @@
     <Compile Include="Serialization\CustomConverterTests.Attribute.cs" />
     <Compile Include="Serialization\CustomConverterTests.BadConverters.cs" />
     <Compile Include="Serialization\CustomConverterTests.cs" />
+    <Compile Include="Serialization\CustomConverterTests.DerivedTypes.cs" />
     <Compile Include="Serialization\CustomConverterTests.Dictionary.cs" />
     <Compile Include="Serialization\CustomConverterTests.Enum.cs" />
     <Compile Include="Serialization\CustomConverterTests.Exceptions.cs" />
@@ -111,13 +112,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JsonNumberTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonPackageVersion)" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JsonBooleanTests.cs" />
+    <Compile Include="JsonNumberTests.cs" />
+    <Compile Include="JsonObjectTests.cs" />
+    <Compile Include="JsonObjectTests.TestData.cs" />
     <Compile Include="JsonStringTests.cs" />
   </ItemGroup>
 </Project>

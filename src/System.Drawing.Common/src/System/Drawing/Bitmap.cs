@@ -15,13 +15,13 @@ namespace System.Drawing
     [System.Runtime.CompilerServices.TypeForwardedFrom("System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
     public sealed partial class Bitmap : Image
     {
-        private static Color s_defaultTransparentColor = Color.LightGray;
+        private static readonly Color s_defaultTransparentColor = Color.LightGray;
 
         private Bitmap() { }
 
         internal Bitmap(IntPtr ptr) => SetNativeImage(ptr);
 
-        public Bitmap(string filename) : this (filename, useIcm: false) { }
+        public Bitmap(string filename) : this(filename, useIcm: false) { }
 
         public Bitmap(string filename, bool useIcm)
         {

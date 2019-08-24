@@ -176,16 +176,16 @@ namespace System.DirectoryServices.AccountManagement
         // Private fields
         //
 
-        private SAMStoreCtx _storeCtx;
-        private DirectoryEntry _ctxBase;
-        private DirectoryEntries _entries;
-        private IEnumerator _enumerator = null;  // the enumerator for "entries"
+        private readonly SAMStoreCtx _storeCtx;
+        private readonly DirectoryEntry _ctxBase;
+        private readonly DirectoryEntries _entries;
+        private readonly IEnumerator _enumerator = null;  // the enumerator for "entries"
         private DirectoryEntry _current = null;  // the DirectoryEntry that we're currently positioned at
 
         // Filter parameters
-        private int _sizeLimit;  // -1 == no limit
-        private List<string> _schemaTypes;
-        private SAMMatcher _matcher;
+        private readonly int _sizeLimit;  // -1 == no limit
+        private readonly List<string> _schemaTypes;
+        private readonly SAMMatcher _matcher;
 
         // Count of number of results returned so far
         private int _resultsReturned = 0;
@@ -205,7 +205,7 @@ namespace System.DirectoryServices.AccountManagement
 
     internal class QbeMatcher : SAMMatcher
     {
-        private QbeFilterDescription _propertiesToMatch;
+        private readonly QbeFilterDescription _propertiesToMatch;
 
         internal QbeMatcher(QbeFilterDescription propertiesToMatch)
         {
@@ -283,7 +283,7 @@ namespace System.DirectoryServices.AccountManagement
 
         // We only list properties we support filtering on in this table.  At run-time, if we detect they set a
         // property that's not listed here, we throw an exception.
-        private static object[,] s_filterPropertiesTableRaw =
+        private static readonly object[,] s_filterPropertiesTableRaw =
         {
             // QbeType                                          WinNT Property          Matcher
             {typeof(DescriptionFilter),                         "Description",              new MatcherDelegate(StringMatcher)},
@@ -311,7 +311,7 @@ namespace System.DirectoryServices.AccountManagement
             {typeof(BadLogonCountFilter),                           "BadPasswordAttempts",                new MatcherDelegate(IntMatcher)},
         };
 
-        private static Hashtable s_filterPropertiesTable = null;
+        private static readonly Hashtable s_filterPropertiesTable = null;
 
         private class FilterPropertyTableEntry
         {
@@ -389,33 +389,17 @@ namespace System.DirectoryServices.AccountManagement
                     }
 
                     int comparisonResult = DateTime.Compare(value, (DateTime)valueToMatch.Value);
-                    bool result = true;
 
-                    switch (valueToMatch.Match)
+                    bool result = valueToMatch.Match switch
                     {
-                        case MatchType.Equals:
-                            result = comparisonResult == 0;
-                            break;
-                        case MatchType.NotEquals:
-                            result = comparisonResult != 0;
-                            break;
-                        case MatchType.GreaterThan:
-                            result = comparisonResult > 0;
-                            break;
-                        case MatchType.GreaterThanOrEquals:
-                            result = comparisonResult >= 0;
-                            break;
-                        case MatchType.LessThan:
-                            result = comparisonResult < 0;
-                            break;
-                        case MatchType.LessThanOrEquals:
-                            result = comparisonResult <= 0;
-                            break;
-                        default:
-                            result = false;
-                            break;
-                    }
-
+                        MatchType.Equals => comparisonResult == 0,
+                        MatchType.NotEquals => comparisonResult != 0,
+                        MatchType.GreaterThan => comparisonResult > 0,
+                        MatchType.GreaterThanOrEquals => comparisonResult >= 0,
+                        MatchType.LessThan => comparisonResult < 0,
+                        MatchType.LessThanOrEquals => comparisonResult <= 0,
+                        _ => false,
+                    };
                     return result;
                 }
             }
@@ -469,30 +453,16 @@ namespace System.DirectoryServices.AccountManagement
                     int value = (int)de.Properties[winNTPropertyName].Value;
                     int comparisonValue = (int)valueToMatch.Value;
 
-                    switch (valueToMatch.Match)
+                    result = valueToMatch.Match switch
                     {
-                        case MatchType.Equals:
-                            result = (value == comparisonValue);
-                            break;
-                        case MatchType.NotEquals:
-                            result = (value != comparisonValue);
-                            break;
-                        case MatchType.GreaterThan:
-                            result = (value > comparisonValue);
-                            break;
-                        case MatchType.GreaterThanOrEquals:
-                            result = (value >= comparisonValue);
-                            break;
-                        case MatchType.LessThan:
-                            result = (value < comparisonValue);
-                            break;
-                        case MatchType.LessThanOrEquals:
-                            result = (value <= comparisonValue);
-                            break;
-                        default:
-                            result = false;
-                            break;
-                    }
+                        MatchType.Equals => (value == comparisonValue),
+                        MatchType.NotEquals => (value != comparisonValue),
+                        MatchType.GreaterThan => (value > comparisonValue),
+                        MatchType.GreaterThanOrEquals => (value >= comparisonValue),
+                        MatchType.LessThan => (value < comparisonValue),
+                        MatchType.LessThanOrEquals => (value <= comparisonValue),
+                        _ => false,
+                    };
                 }
             }
 
@@ -704,9 +674,9 @@ namespace System.DirectoryServices.AccountManagement
             AccountExpirationTime
         }
 
-        private DateProperty _propertyToMatch;
-        private MatchType _matchType;
-        private DateTime _valueToMatch;
+        private readonly DateProperty _propertyToMatch;
+        private readonly MatchType _matchType;
+        private readonly DateTime _valueToMatch;
 
         internal FindByDateMatcher(DateProperty property, MatchType matchType, DateTime value)
         {
@@ -835,7 +805,7 @@ namespace System.DirectoryServices.AccountManagement
 
     internal class GroupMemberMatcher : SAMMatcher
     {
-        private byte[] _memberSidToMatch;
+        private readonly byte[] _memberSidToMatch;
 
         internal GroupMemberMatcher(byte[] memberSidToMatch)
         {

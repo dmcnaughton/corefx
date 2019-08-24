@@ -82,7 +82,7 @@ namespace System
 
             bool hasUnicode = false;
 
-            _iriParsing = (s_IriParsing && ((_syntax == null) || _syntax.InFact(UriSyntaxFlags.AllowIriParsing)));
+            _iriParsing = (IriParsing && ((_syntax == null) || _syntax.InFact(UriSyntaxFlags.AllowIriParsing)));
 
             if (_iriParsing &&
                 (CheckForUnicode(_string) || CheckForEscapedUnreserved(_string)))
@@ -527,7 +527,7 @@ namespace System
                     == (Flags.SchemeNotCanonical | Flags.AuthorityFound))
                 {
                     idx = (ushort)_syntax.SchemeName.Length;
-                    while (str[idx++] != ':') ;
+                    while (str[idx++] != ':');
                     if (idx + 1 >= _string.Length || str[idx] != '/' || str[idx + 1] != '/')
                         return false;
                 }

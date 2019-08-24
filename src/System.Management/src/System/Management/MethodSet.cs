@@ -48,7 +48,7 @@ namespace System.Management
     //CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC//
     public class MethodDataCollection : ICollection, IEnumerable
     {
-        private ManagementObject parent;
+        private readonly ManagementObject parent;
 
         private class enumLock
         {
@@ -125,7 +125,9 @@ namespace System.Management
         /// <para><see langword='true'/> if the object is synchronized;
         ///    otherwise, <see langword='false'/>.</para>
         /// </value>
-        public bool IsSynchronized { get { return false; }
+        public bool IsSynchronized
+        {
+            get { return false; }
         }
 
         /// <summary>
@@ -134,7 +136,9 @@ namespace System.Management
         /// <value>
         ///    <para>The object to be used for synchronization.</para>
         /// </value>
-        public object SyncRoot { get { return this; }
+        public object SyncRoot
+        {
+            get { return this; }
         }
 
         /// <overload>
@@ -238,9 +242,9 @@ namespace System.Management
         /// </example>
         public class MethodDataEnumerator : IEnumerator
         {
-            private ManagementObject parent;
-            private ArrayList methodNames; //can't use simple array because we don't know the size...
-            private IEnumerator en;
+            private readonly ManagementObject parent;
+            private readonly ArrayList methodNames; //can't use simple array because we don't know the size...
+            private readonly IEnumerator en;
 
             //Internal constructor
             //Because WMI doesn't provide a "GetMethodNames" for methods similar to "GetNames" for properties,
@@ -304,7 +308,7 @@ namespace System.Management
             {
                 get
                 {
-                        return new MethodData(parent, (string)en.Current);
+                    return new MethodData(parent, (string)en.Current);
                 }
             }
 
@@ -312,7 +316,7 @@ namespace System.Management
             /// <para>Moves to the next element in the <see cref='System.Management.MethodDataCollection'/> enumeration.</para>
             /// </summary>
             /// <returns><see langword='true'/> if the enumerator was successfully advanced to the next method; <see langword='false'/> if the enumerator has passed the end of the collection.</returns>
-            public bool MoveNext ()
+            public bool MoveNext()
             {
                 return en.MoveNext();
             }
@@ -342,7 +346,7 @@ namespace System.Management
             get
             {
                 if (null == methodName)
-                    throw new ArgumentNullException (nameof(methodName));
+                    throw new ArgumentNullException(nameof(methodName));
 
                 return new MethodData(parent, methodName);
             }

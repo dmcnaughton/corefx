@@ -193,7 +193,7 @@ namespace System.Text.Json.Serialization.Tests
             }
 
             {
-                Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<StringToStringIReadOnlyDictionaryWrapper>(JsonString));
+                Assert.Throws<NotSupportedException>(() => JsonSerializer.Deserialize<StringToStringIReadOnlyDictionaryWrapper>(JsonString));
 
                 StringToStringIReadOnlyDictionaryWrapper obj = new StringToStringIReadOnlyDictionaryWrapper(new Dictionary<string, string>()
                 {
@@ -208,7 +208,7 @@ namespace System.Text.Json.Serialization.Tests
             }
 
             {
-                Assert.Throws<JsonException>(() => JsonSerializer.Deserialize<StringToStringIImmutableDictionaryWrapper>(JsonString));
+                Assert.Throws<NotSupportedException>(() => JsonSerializer.Deserialize<StringToStringIImmutableDictionaryWrapper>(JsonString));
 
                 StringToStringIImmutableDictionaryWrapper obj = new StringToStringIImmutableDictionaryWrapper(new Dictionary<string, string>()
                 {
@@ -800,8 +800,8 @@ namespace System.Text.Json.Serialization.Tests
         public static void UnicodePropertyNames()
         {
             {
-                Dictionary<string, int> obj = JsonSerializer.Deserialize<Dictionary<string, int>>(@"{""Aѧ"":1}");
-                Assert.Equal(1, obj["Aѧ"]);
+                Dictionary<string, int> obj = JsonSerializer.Deserialize<Dictionary<string, int>>(@"{""A\u0467"":1}");
+                Assert.Equal(1, obj["A\u0467"]);
 
                 // Verify the name is escaped after serialize.
                 string json = JsonSerializer.Serialize(obj);
@@ -812,7 +812,7 @@ namespace System.Text.Json.Serialization.Tests
                 // We want to go over StackallocThreshold=256 to force a pooled allocation, so this property is 200 chars and 400 bytes.
                 const int charsInProperty = 200;
 
-                string longPropertyName = new string('ѧ', charsInProperty);
+                string longPropertyName = new string('\u0467', charsInProperty);
 
                 Dictionary<string, int> obj = JsonSerializer.Deserialize<Dictionary<string, int>>($"{{\"{longPropertyName}\":1}}");
                 Assert.Equal(1, obj[longPropertyName]);

@@ -53,13 +53,15 @@ namespace System.Collections.Specialized
         }
 
         [Obsolete("Please use NameObjectCollectionBase(IEqualityComparer) instead.")]
-        protected NameObjectCollectionBase(IHashCodeProvider hashProvider, IComparer comparer) {
+        protected NameObjectCollectionBase(IHashCodeProvider hashProvider, IComparer comparer)
+        {
             _keyComparer = new CompatibleComparer(hashProvider, comparer);
             Reset();
         }
 
         [Obsolete("Please use NameObjectCollectionBase(Int32, IEqualityComparer) instead.")]
-        protected NameObjectCollectionBase(int capacity, IHashCodeProvider hashProvider, IComparer comparer) {
+        protected NameObjectCollectionBase(int capacity, IHashCodeProvider hashProvider, IComparer comparer)
+        {
             _keyComparer = new CompatibleComparer(hashProvider, comparer);
             Reset(capacity);
         }
@@ -486,8 +488,8 @@ namespace System.Collections.Specialized
         internal class NameObjectKeysEnumerator : IEnumerator
         {
             private int _pos;
-            private NameObjectCollectionBase _coll;
-            private int _version;
+            private readonly NameObjectCollectionBase _coll;
+            private readonly int _version;
 
             internal NameObjectKeysEnumerator(NameObjectCollectionBase coll)
             {
@@ -545,7 +547,7 @@ namespace System.Collections.Specialized
         /// </devdoc>
         public class KeysCollection : ICollection
         {
-            private NameObjectCollectionBase _coll;
+            private readonly NameObjectCollectionBase _coll;
 
             internal KeysCollection(NameObjectCollectionBase coll)
             {

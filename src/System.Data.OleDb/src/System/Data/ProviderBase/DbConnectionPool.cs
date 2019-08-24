@@ -31,7 +31,7 @@ namespace System.Data.ProviderBase
         // copy as part of the value.
         private sealed class TransactedConnectionList : List<DbConnectionInternal>
         {
-            private SysTx.Transaction _transaction;
+            private readonly SysTx.Transaction _transaction;
             internal TransactedConnectionList(int initialAllocation, SysTx.Transaction tx) : base(initialAllocation)
             {
                 _transaction = tx;
@@ -62,9 +62,9 @@ namespace System.Data.ProviderBase
 
         private sealed class TransactedConnectionPool
         {
-            private Dictionary<SysTx.Transaction, TransactedConnectionList> _transactedCxns;
+            private readonly Dictionary<SysTx.Transaction, TransactedConnectionList> _transactedCxns;
 
-            private DbConnectionPool _pool;
+            private readonly DbConnectionPool _pool;
 
             internal TransactedConnectionPool(DbConnectionPool pool)
             {
@@ -594,7 +594,7 @@ namespace System.Data.ProviderBase
             // new stack to old stack.
             if (_waitHandles.PoolSemaphore.WaitOne(0, false) /* != WAIT_TIMEOUT */)
             {
-                for (; ; )
+                while (true)
                 {
                     DbConnectionInternal obj;
 

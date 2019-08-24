@@ -14,7 +14,7 @@ namespace System.ComponentModel.Composition.Hosting
 {
     public partial class CompositionContainer : ExportProvider, ICompositionService, IDisposable
     {
-        private CompositionOptions _compositionOptions;
+        private readonly CompositionOptions _compositionOptions;
         private ImportEngine _importEngine;
         private ComposablePartExportProvider _partExportProvider;
         private ExportProvider _rootProvider;
@@ -27,8 +27,8 @@ namespace System.ComponentModel.Composition.Hosting
 
         private readonly ReadOnlyCollection<ExportProvider> _providers;
         private volatile bool _isDisposed = false;
-        private object _lock = new object();
-        private static ReadOnlyCollection<ExportProvider> EmptyProviders = new ReadOnlyCollection<ExportProvider>(Array.Empty<ExportProvider>());
+        private readonly object _lock = new object();
+        private static readonly ReadOnlyCollection<ExportProvider> EmptyProviders = new ReadOnlyCollection<ExportProvider>(Array.Empty<ExportProvider>());
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="CompositionContainer"/> class.
@@ -90,7 +90,7 @@ namespace System.ComponentModel.Composition.Hosting
         /// <exception cref="ArgumentException">
         ///     <paramref name="providers"/> contains an element that is <see langword="null"/>.
         /// </exception>
-        public CompositionContainer(ComposablePartCatalog catalog, params ExportProvider[] providers):
+        public CompositionContainer(ComposablePartCatalog catalog, params ExportProvider[] providers) :
             this(catalog, false, providers)
         {
         }
@@ -212,7 +212,7 @@ namespace System.ComponentModel.Composition.Hosting
                 _disposableRootProvider = _rootProvider as IDisposable;
             }
 
-//Insert Composition Service
+            //Insert Composition Service
             if (compositionOptions.HasFlag(CompositionOptions.ExportCompositionService))
             {
                 this.ComposeExportedValue<ICompositionService>(new CompositionServiceShim(this));
@@ -325,7 +325,7 @@ namespace System.ComponentModel.Composition.Hosting
                             disposableRootProvider = _disposableRootProvider;
                             _disposableRootProvider = null;
 
-                            disposableLocalExportProvider = _disposableLocalExportProvider ;
+                            disposableLocalExportProvider = _disposableLocalExportProvider;
                             _disposableLocalExportProvider = null;
                             _localExportProvider = null;
 

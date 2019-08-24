@@ -33,10 +33,10 @@ namespace System.Data.SqlClient
         //  may be initiated here AFTER the connection lock is released, but should NOT fall under this class's locking strategy.
 
         private SqlInternalConnection _connection;            // the internal connection that is the root of the transaction
-        private IsolationLevel _isolationLevel;        // the IsolationLevel of the transaction we delegated to the server
+        private readonly IsolationLevel _isolationLevel;        // the IsolationLevel of the transaction we delegated to the server
         private SqlInternalTransaction _internalTransaction;   // the SQL Server transaction we're delegating to
 
-        private Transaction _atomicTransaction;
+        private readonly Transaction _atomicTransaction;
 
         private bool _active;                // Is the transaction active?
 
@@ -55,26 +55,15 @@ namespace System.Data.SqlClient
             // of delegation, in case System.Transactions adds another isolation
             // level we don't know about -- we can throw the exception at a better
             // place.
-            switch (systxIsolationLevel)
+            _isolationLevel = systxIsolationLevel switch
             {
-                case Transactions.IsolationLevel.ReadCommitted:
-                    _isolationLevel = IsolationLevel.ReadCommitted;
-                    break;
-                case Transactions.IsolationLevel.ReadUncommitted:
-                    _isolationLevel = IsolationLevel.ReadUncommitted;
-                    break;
-                case Transactions.IsolationLevel.RepeatableRead:
-                    _isolationLevel = IsolationLevel.RepeatableRead;
-                    break;
-                case Transactions.IsolationLevel.Serializable:
-                    _isolationLevel = IsolationLevel.Serializable;
-                    break;
-                case Transactions.IsolationLevel.Snapshot:
-                    _isolationLevel = IsolationLevel.Snapshot;
-                    break;
-                default:
-                    throw SQL.UnknownSysTxIsolationLevel(systxIsolationLevel);
-            }
+                Transactions.IsolationLevel.ReadCommitted => IsolationLevel.ReadCommitted,
+                Transactions.IsolationLevel.ReadUncommitted => IsolationLevel.ReadUncommitted,
+                Transactions.IsolationLevel.RepeatableRead => IsolationLevel.RepeatableRead,
+                Transactions.IsolationLevel.Serializable => IsolationLevel.Serializable,
+                Transactions.IsolationLevel.Snapshot => IsolationLevel.Snapshot,
+                _ => throw SQL.UnknownSysTxIsolationLevel(systxIsolationLevel),
+            };
         }
 
         internal Transaction Transaction

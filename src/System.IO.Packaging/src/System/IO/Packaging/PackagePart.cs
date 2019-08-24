@@ -786,22 +786,22 @@ namespace System.IO.Packaging
         //has been closed.
         private bool IsStreamClosed(Stream s)
         {
-            return !s.CanRead  && !s.CanSeek && !s.CanWrite;
+            return !s.CanRead && !s.CanSeek && !s.CanWrite;
         }
 
         #endregion Private Methods
 
         #region Private Members
 
-        private PackUriHelper.ValidatedPartUri _uri;
+        private readonly PackUriHelper.ValidatedPartUri _uri;
         private Package _container;
         private ContentType _contentType;
         private List<Stream> _requestedStreams;
         private InternalRelationshipCollection _relationships;
-        private CompressionOption _compressionOption = CompressionOption.NotCompressed;
+        private readonly CompressionOption _compressionOption = CompressionOption.NotCompressed;
         private bool _disposed;
         private bool _deleted;
-        private bool _isRelationshipPart;
+        private readonly bool _isRelationshipPart;
 
         #endregion Private Members
     }

@@ -14,7 +14,7 @@ namespace System.ComponentModel.Design
     public abstract class DesignerOptionService : IDesignerOptionService
     {
         private DesignerOptionCollection _options;
-        private static readonly char[] s_slash = {'\\'};
+        private static readonly char[] s_slash = { '\\' };
 
         /// <summary>
         /// Returns the options collection for this service. There is
@@ -126,8 +126,8 @@ namespace System.ComponentModel.Design
         [TypeConverter(typeof(DesignerOptionConverter))]
         public sealed class DesignerOptionCollection : IList
         {
-            private DesignerOptionService _service;
-            private object _value;
+            private readonly DesignerOptionService _service;
+            private readonly object _value;
             private ArrayList _children;
             private PropertyDescriptorCollection _properties;
 
@@ -417,7 +417,7 @@ namespace System.ComponentModel.Design
             private sealed class WrappedPropertyDescriptor : PropertyDescriptor
             {
                 private readonly object _target;
-                private PropertyDescriptor _property;
+                private readonly PropertyDescriptor _property;
 
                 internal WrappedPropertyDescriptor(PropertyDescriptor property, object target) : base(property.Name, null)
                 {
@@ -483,7 +483,7 @@ namespace System.ComponentModel.Design
 
             private class OptionPropertyDescriptor : PropertyDescriptor
             {
-                private DesignerOptionCollection _option;
+                private readonly DesignerOptionCollection _option;
 
                 internal OptionPropertyDescriptor(DesignerOptionCollection option) : base(option.Name, null)
                 {

@@ -98,8 +98,8 @@ namespace System.Management
     //CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC//
     public class MethodData
     {
-        private ManagementObject parent; //needed to be able to get method qualifiers
-        private string methodName;
+        private readonly ManagementObject parent; //needed to be able to get method qualifiers
+        private readonly string methodName;
         private IWbemClassObjectFreeThreaded wmiInParams;
         private IWbemClassObjectFreeThreaded wmiOutParams;
         private QualifierDataCollection qualifiers;
@@ -170,7 +170,8 @@ namespace System.Management
             get
             {
                 RefreshMethodInfo();
-                return (null == wmiInParams) ? null : new ManagementBaseObject(wmiInParams); }
+                return (null == wmiInParams) ? null : new ManagementBaseObject(wmiInParams);
+            }
         }
 
         /// <summary>
@@ -196,7 +197,8 @@ namespace System.Management
             get
             {
                 RefreshMethodInfo();
-                return (null == wmiOutParams) ? null : new ManagementBaseObject(wmiOutParams); }
+                return (null == wmiOutParams) ? null : new ManagementBaseObject(wmiOutParams);
+            }
         }
 
         /// <summary>

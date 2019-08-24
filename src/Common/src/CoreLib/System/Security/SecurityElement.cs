@@ -4,8 +4,6 @@
 
 using System.Collections;
 using System.Diagnostics;
-using System.Globalization;
-using System.IO;
 using System.Text;
 
 namespace System.Security
@@ -202,8 +200,7 @@ namespace System.Security
 
             for (int i = 0; i < _children.Count; ++i)
             {
-                ISecurityElementFactory? iseFactory = _children[i] as ISecurityElementFactory;
-                if (iseFactory != null && !(_children[i] is SecurityElement))
+                if (_children[i] is ISecurityElementFactory iseFactory && !(_children[i] is SecurityElement))
                     _children[i] = iseFactory.CreateSecurityElement();
             }
         }
@@ -496,12 +493,12 @@ namespace System.Security
         {
             StringBuilder sb = new StringBuilder();
 
-            ToString("", sb, (obj, str) => ((StringBuilder)obj).Append(str));
+            ToString(sb, (obj, str) => ((StringBuilder)obj).Append(str));
 
             return sb.ToString();
         }
 
-        private void ToString(string indent, object obj, Action<object, string?> write)
+        private void ToString(object obj, Action<object, string?> write)
         {
             write(obj, "<");
             write(obj, _tag);
@@ -554,7 +551,7 @@ namespace System.Security
 
                     for (int i = 0; i < _children.Count; ++i)
                     {
-                        ((SecurityElement)_children[i]!).ToString(string.Empty, obj, write);
+                        ((SecurityElement)_children[i]!).ToString(obj, write);
                     }
                 }
 
@@ -645,7 +642,7 @@ namespace System.Security
             if (xml == null)
                 throw new ArgumentNullException(nameof(xml));
 
-            return default(SecurityElement);
+            return default;
         }
 
         //--------------- ISecurityElementFactory implementation -----------------

@@ -66,7 +66,7 @@ namespace System.Data.SqlClient
 
         internal Encoding _defaultEncoding = null;                  // for sql character data
 
-        private static EncryptionOptions s_sniSupportedEncryptionOption = TdsParserStateObjectFactory.Singleton.EncryptionOptions;
+        private static readonly EncryptionOptions s_sniSupportedEncryptionOption = TdsParserStateObjectFactory.Singleton.EncryptionOptions;
 
         private EncryptionOptions _encryptionOption = s_sniSupportedEncryptionOption;
 
@@ -7548,7 +7548,7 @@ namespace System.Data.SqlClient
                     {
                         WriteUnsignedLong(TdsEnums.SQL_PLP_NULL, stateObj); // PLP Null.
                     }
-                    return null;//continue; // End of UDT - continue to next parameter.
+                    return null; //continue; // End of UDT - continue to next parameter.
                 }
                 else if (mt.IsPlp)
                 {
@@ -8925,8 +8925,8 @@ namespace System.Data.SqlClient
 
         private sealed class TdsOutputStream : Stream
         {
-            private TdsParser _parser;
-            private TdsParserStateObject _stateObj;
+            private readonly TdsParser _parser;
+            private readonly TdsParserStateObject _stateObj;
             private byte[] _preambleToStrip;
 
             public TdsOutputStream(TdsParser parser, TdsParserStateObject stateObj, byte[] preambleToStrip)
@@ -9069,8 +9069,8 @@ namespace System.Data.SqlClient
 
         private sealed class ConstrainedTextWriter : TextWriter
         {
-            private TextWriter _next;
-            private int _size;
+            private readonly TextWriter _next;
+            private readonly int _size;
             private int _written;
 
             public ConstrainedTextWriter(TextWriter next, int size)
@@ -9364,17 +9364,13 @@ namespace System.Data.SqlClient
             {
                 return null;
             }
-            switch (task.Status)
+            return task.Status switch
             {
-                case TaskStatus.RanToCompletion:
-                    return null;
-                case TaskStatus.Faulted:
-                    throw task.Exception.InnerException;
-                case TaskStatus.Canceled:
-                    throw SQL.OperationCancelled();
-                default:
-                    return task;
-            }
+                TaskStatus.RanToCompletion => null,
+                TaskStatus.Faulted => throw task.Exception.InnerException,
+                TaskStatus.Canceled => throw SQL.OperationCancelled(),
+                _ => task,
+            };
         }
 
         private Task WriteValue(object value, MetaType type, byte scale, int actualLength, int encodingByteSize, int offset, TdsParserStateObject stateObj, int paramSize, bool isDataFeed)

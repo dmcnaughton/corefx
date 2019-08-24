@@ -22,7 +22,7 @@ namespace System.ComponentModel.Composition.ReflectionModel
         private volatile bool _invokeImportsSatisfied = true;
         private bool _initialCompositionComplete = false;
         private volatile object _cachedInstance;
-        private object _lock = new object();
+        private readonly object _lock = new object();
 
         public ReflectionComposablePart(ReflectionComposablePartDefinition definition)
         {
@@ -187,7 +187,7 @@ namespace System.ComponentModel.Composition.ReflectionModel
         {
             RequiresRunning();
             Requires.NotNull(definition, nameof(definition));
-            Requires.NotNull(exports, nameof(exports));;
+            Requires.NotNull(exports, nameof(exports));
 
             ImportingItem item = GetImportingItemFromDefinition(definition);
             if (item == null)

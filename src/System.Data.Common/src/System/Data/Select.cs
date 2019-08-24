@@ -12,9 +12,9 @@ namespace System.Data
     {
         private readonly DataTable _table;
         private readonly IndexField[] _indexFields;
-        private DataViewRowState _recordStates;
-        private DataExpression _rowFilter;
-        private ExpressionNode _expression;
+        private readonly DataViewRowState _recordStates;
+        private readonly DataExpression _rowFilter;
+        private readonly ExpressionNode _expression;
 
         private Index _index;
 
@@ -351,7 +351,7 @@ namespace System.Data
                             if (_candidateColumns[i] != null)
                             {
                                 ndxFields[j++] = new IndexField(_table.Columns[i], isDescending: false);
-                                _candidateColumns[i].flag = false;// this means it is processed
+                                _candidateColumns[i].flag = false; // this means it is processed
                             }
                         }
                         for (i = 0; i < lenIndexDesc; i++)
@@ -371,7 +371,7 @@ namespace System.Data
                         {
                             if (_candidateColumns[i] != null)
                             {
-                                _candidateColumns[i].flag = false;// same as before, it is false when it returns
+                                _candidateColumns[i].flag = false; // same as before, it is false when it returns
                             }
                         }
 
@@ -433,7 +433,7 @@ namespace System.Data
                         {
                             if (_candidateColumns[i] != null)
                             {
-                                _candidateColumns[i].flag = false;// same as before, it is false when it returns
+                                _candidateColumns[i].flag = false; // same as before, it is false when it returns
                             }
                         }
                     }

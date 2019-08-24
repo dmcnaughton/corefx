@@ -18,10 +18,10 @@ namespace System.ComponentModel.Composition.Hosting
         private bool _isDisposed = false;
         private volatile AggregateCatalog _innerCatalog = null;
         private readonly object _thisLock = new object();
-        private ICompositionElement _definitionOrigin = null;
-        private ReflectionContext _reflectionContext = null;
+        private readonly ICompositionElement _definitionOrigin = null;
+        private readonly ReflectionContext _reflectionContext = null;
 
-        public ApplicationCatalog() {}
+        public ApplicationCatalog() { }
 
         public ApplicationCatalog(ICompositionElement definitionOrigin)
         {
@@ -59,9 +59,9 @@ namespace System.ComponentModel.Composition.Hosting
                 : new DirectoryCatalog(location, pattern);
         }
 
-//  Note:
-//      Creating a catalog does not cause change notifications to propagate, For some reason the DeploymentCatalog did, but that is a bug.
-//      InnerCatalog is delay evaluated, from data supplied at construction time and so does not propagate change notifications
+        //  Note:
+        //      Creating a catalog does not cause change notifications to propagate, For some reason the DeploymentCatalog did, but that is a bug.
+        //      InnerCatalog is delay evaluated, from data supplied at construction time and so does not propagate change notifications
         private AggregateCatalog InnerCatalog
         {
             get
@@ -85,7 +85,7 @@ namespace System.ComponentModel.Composition.Hosting
                             string relativeSearchPath = AppDomain.CurrentDomain.RelativeSearchPath;
                             if (!string.IsNullOrEmpty(relativeSearchPath))
                             {
-                                string[] probingPaths = relativeSearchPath.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+                                string[] probingPaths = relativeSearchPath.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                                 foreach (var probingPath in probingPaths)
                                 {
                                     var path = Path.Combine(location, probingPath);

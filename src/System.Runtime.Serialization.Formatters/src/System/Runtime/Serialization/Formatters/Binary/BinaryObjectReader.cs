@@ -92,7 +92,7 @@ namespace System.Runtime.Serialization.Formatters.Binary
                 if (_fullDeserialization)
                 {
                     // Reinitialize
-                    _objectManager = new ObjectManager(_surrogates, _context, false, false);
+                    _objectManager = new ObjectManager(_surrogates, _context);
                     _serObjectInfoInit = new SerObjectInfoInit();
                 }
 
@@ -147,7 +147,7 @@ namespace System.Runtime.Serialization.Formatters.Binary
         {
             _fullDeserialization = true;
             _stack = new SerStack("ObjectReader Object Stack");
-            _objectManager = new ObjectManager(_surrogates, _context, false, false);
+            _objectManager = new ObjectManager(_surrogates, _context);
             if (_formatterConverter == null)
             {
                 _formatterConverter = new FormatterConverter();
@@ -734,7 +734,7 @@ namespace System.Runtime.Serialization.Formatters.Binary
                 if ((pr._objectInfo != null) && pr._objectInfo._objectType != null && (pr._objectInfo._objectType.IsValueType))
                 {
                     pr._isValueTypeFixup = true; //Valuefixup
-                    ValueFixupStack.Push(new ValueFixup(objectPr._newObj, pr._name, objectPr._objectInfo));//valuefixup
+                    ValueFixupStack.Push(new ValueFixup(objectPr._newObj, pr._name, objectPr._objectInfo)); //valuefixup
                 }
                 else
                 {

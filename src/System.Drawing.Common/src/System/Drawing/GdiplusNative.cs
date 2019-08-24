@@ -1344,6 +1344,18 @@ namespace System.Drawing
 
             [DllImport(LibraryName, ExactSpelling = true)]
             internal static extern int GdipTransformPointsI(HandleRef graphics, int destSpace, int srcSpace, Point* points, int count);
+
+            [DllImport(LibraryName, ExactSpelling = true, CharSet = CharSet.Unicode)]
+            internal static extern int GdipLoadImageFromFileICM(string filename, out IntPtr image);
+
+            [DllImport(LibraryName, ExactSpelling = true, CharSet = CharSet.Unicode)]
+            internal static extern int GdipLoadImageFromFile(string filename, out IntPtr image);
+
+            [DllImport(LibraryName, ExactSpelling = true)]
+            internal static extern int GdipGetEncoderParameterListSize(HandleRef image, ref Guid encoder, out int size);
+
+            [DllImport(LibraryName, ExactSpelling = true)]
+            internal static extern int GdipGetEncoderParameterList(HandleRef image, ref Guid encoder, int size, IntPtr buffer);
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -1379,8 +1391,8 @@ namespace System.Drawing
             // dealing with function *'s and what not - so we make explicit calls
             // to gdi+ after the fact, via the GdiplusNotificationHook and
             // GdiplusNotificationUnhook methods.
-            public IntPtr hook;//not used
-            public IntPtr unhook;//not used.
+            public IntPtr hook; //not used
+            public IntPtr unhook; //not used.
         }
     }
 }

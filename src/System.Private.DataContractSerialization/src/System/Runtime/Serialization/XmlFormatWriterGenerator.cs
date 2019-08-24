@@ -25,7 +25,7 @@ namespace System.Runtime.Serialization
     internal sealed class XmlFormatWriterGenerator
 #endif
     {
-        private CriticalHelper _helper;
+        private readonly CriticalHelper _helper;
 
         public XmlFormatWriterGenerator()
         {
@@ -614,7 +614,7 @@ namespace System.Runtime.Serialization
                 {
                     if (isNullableOfT)
                     {
-                        memberValue = UnwrapNullableObject(memberValue);//Leaves !HasValue on stack
+                        memberValue = UnwrapNullableObject(memberValue); //Leaves !HasValue on stack
                         memberType = memberValue.LocalType;
                     }
                     else
@@ -703,7 +703,7 @@ namespace System.Runtime.Serialization
                 _ilg.Pop();
                 _ilg.Call(XmlFormatGeneratorStatics.GetDefaultValueMethod.MakeGenericMethod(memberType));
                 _ilg.Stloc(memberValue);
-                _ilg.Load(true);//isNull
+                _ilg.Load(true); //isNull
                 _ilg.MarkLabel(end);
                 return memberValue;
             }

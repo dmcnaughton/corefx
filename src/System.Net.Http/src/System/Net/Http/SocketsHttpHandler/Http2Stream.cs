@@ -79,7 +79,7 @@ namespace System.Net.Http
             // This is a linked token combining the above source and the user-supplied token to SendRequestBodyAsync
             private CancellationToken _requestBodyCancellationToken;
 
-            private TaskCompletionSource<bool> _expect100ContinueWaiter;
+            private readonly TaskCompletionSource<bool> _expect100ContinueWaiter;
 
             private int _headerBudgetRemaining;
 
@@ -683,7 +683,7 @@ namespace System.Net.Http
             // (4) Receiving EOF from the server. If so, resetException will contain an exception like "expected 9 bytes of data", and canRetry will be false.
             public void OnReset(Exception resetException, Http2ProtocolErrorCode? resetStreamErrorCode = null, bool canRetry = false)
             {
-                if (NetEventSource.IsEnabled) Trace($"{nameof(resetException)}={resetException}, {nameof(resetStreamErrorCode )}={resetStreamErrorCode}");
+                if (NetEventSource.IsEnabled) Trace($"{nameof(resetException)}={resetException}, {nameof(resetStreamErrorCode)}={resetStreamErrorCode}");
 
                 bool cancel = false;
                 CancellationTokenSource requestBodyCancellationSource = null;

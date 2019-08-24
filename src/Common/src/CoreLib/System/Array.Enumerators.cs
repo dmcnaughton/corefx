@@ -10,11 +10,11 @@ namespace System
 {
     internal sealed class ArrayEnumerator : IEnumerator, ICloneable
     {
-        private Array array;
+        private readonly Array array;
         private int index;
-        private int endIndex;
-        private int startIndex;    // Save for Reset.
-        private int[] _indices;    // The current position in a multidim array
+        private readonly int endIndex;
+        private readonly int startIndex;    // Save for Reset.
+        private readonly int[] _indices;    // The current position in a multidim array
         private bool _complete;
 
         internal ArrayEnumerator(Array array, int index, int count)
@@ -31,7 +31,7 @@ namespace System
                 checkForZero *= array.GetLength(i);
             }
             // To make MoveNext simpler, decrement least significant index.
-            _indices[_indices.Length - 1]--;
+            _indices[^1]--;
             _complete = (checkForZero == 0);
         }
 
@@ -102,7 +102,7 @@ namespace System
             }
             _complete = (checkForZero == 0);
             // To make MoveNext simpler, decrement least significant index.
-            _indices[_indices.Length - 1]--;
+            _indices[^1]--;
         }
     }
 
@@ -110,7 +110,7 @@ namespace System
     {
         private readonly Array _array;
         private int _index;
-        private int _endIndex; // Cache Array.Length, since it's a little slow.
+        private readonly int _endIndex; // Cache Array.Length, since it's a little slow.
 
         internal SZArrayEnumerator(Array array)
         {

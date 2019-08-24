@@ -11,7 +11,7 @@ namespace System.Net.Sockets
     // host process that listens for connections from TCP clients.
     public class TcpListener
     {
-        private IPEndPoint _serverSocketEP;
+        private readonly IPEndPoint _serverSocketEP;
         private Socket _serverSocket;
         private bool _active;
         private bool _exclusiveAddressUse;
@@ -326,7 +326,7 @@ namespace System.Net.Sockets
             else
             {
                 // If not, fall-back to old IPv4.
-                listener = new TcpListener(IPAddress.Any , port);
+                listener = new TcpListener(IPAddress.Any, port);
             }
 
             if (NetEventSource.IsEnabled) NetEventSource.Exit(null, port);

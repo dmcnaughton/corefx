@@ -69,7 +69,7 @@ namespace System
             int offset = -1;
             for (int i = 0; i < valueLength; i++)
             {
-                var tempIndex = IndexOf(ref searchSpace, Unsafe.Add(ref value, i), searchSpaceLength);
+                int tempIndex = IndexOf(ref searchSpace, Unsafe.Add(ref value, i), searchSpaceLength);
                 if ((uint)tempIndex < (uint)offset)
                 {
                     offset = tempIndex;
@@ -94,7 +94,7 @@ namespace System
             int offset = -1;
             for (int i = 0; i < valueLength; i++)
             {
-                var tempIndex = LastIndexOf(ref searchSpace, Unsafe.Add(ref value, i), searchSpaceLength);
+                int tempIndex = LastIndexOf(ref searchSpace, Unsafe.Add(ref value, i), searchSpaceLength);
                 if (tempIndex > offset)
                     offset = tempIndex;
             }
@@ -438,7 +438,7 @@ namespace System
             int valueTailLength = valueLength - 1;
 
             int offset = 0;
-            for (; ; )
+            while (true)
             {
                 Debug.Assert(0 <= offset && offset <= searchSpaceLength); // Ensures no deceptive underflows in the computation of "remainingSearchSpaceLength".
                 int remainingSearchSpaceLength = searchSpaceLength - offset - valueTailLength;
@@ -1449,12 +1449,7 @@ namespace System
                         // So the bit position in 'matches' corresponds to the element offset.
 
                         // 16 elements in Vector128<byte> so we compare to ushort.MaxValue to check if everything matched
-                        if (matches == ushort.MaxValue)
-                        {
-                            // All matched
-                            offset += Vector128<byte>.Count;
-                        }
-                        else
+                        if (matches != ushort.MaxValue)
                         {
                             goto Difference;
                         }
@@ -1597,7 +1592,7 @@ namespace System
             else
             {
                 // Flag least significant power of two bit
-                var powerOfTwoFlag = match ^ (match - 1);
+                ulong powerOfTwoFlag = match ^ (match - 1);
                 // Shift all powers of two into the high byte and extract
                 return (int)((powerOfTwoFlag * XorPowerOfTwoToHighByte) >> 57);
             }

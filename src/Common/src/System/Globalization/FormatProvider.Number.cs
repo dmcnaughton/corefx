@@ -597,12 +597,12 @@ namespace System.Globalization
             // better unify it with the code above.
             //
 
-            private static string[] s_posCurrencyFormats =
+            private static readonly string[] s_posCurrencyFormats =
             {
                 "$#", "#$", "$ #", "# $"
             };
 
-            private static string[] s_negCurrencyFormats =
+            private static readonly string[] s_negCurrencyFormats =
             {
                 "($#)", "-$#", "$-#", "$#-",
                 "(#$)", "-#$", "#-$", "#$-",
@@ -610,12 +610,12 @@ namespace System.Globalization
                 "$ -#", "#- $", "($ #)", "(# $)"
             };
 
-            private static string[] s_posPercentFormats =
+            private static readonly string[] s_posPercentFormats =
             {
                 "# %", "#%", "%#", "% #"
             };
 
-            private static string[] s_negPercentFormats =
+            private static readonly string[] s_negPercentFormats =
             {
                 "-# %", "-#%", "-%#",
                 "%-#", "%#-",
@@ -624,12 +624,12 @@ namespace System.Globalization
                 "% -#", "#- %"
             };
 
-            private static string[] s_negNumberFormats =
+            private static readonly string[] s_negNumberFormats =
             {
                 "(#)", "-#", "- #", "#-", "# -",
             };
 
-            private static string s_posNumberFormat = "#";
+            private const string PosNumberFormat = "#";
 
             internal static unsafe void Int32ToDecChars(char* buffer, ref int index, uint value, int digits)
             {
@@ -1025,7 +1025,7 @@ namespace System.Globalization
             {
                 string fmt = number.sign ?
                     s_negNumberFormats[info.NumberNegativePattern] :
-                    s_posNumberFormat;
+                    PosNumberFormat;
 
                 foreach (char ch in fmt)
                 {
@@ -1222,7 +1222,7 @@ namespace System.Globalization
                 fixed (char* pFormat = &MemoryMarshal.GetReference(format))
                 {
                     int src = 0;
-                    for (;;)
+                    while (true)
                     {
                         if (src >= format.Length)
                         {
@@ -1600,12 +1600,12 @@ namespace System.Globalization
                                             // Handles E0, which should format the same as E-0
                                             i++;
                                         }
-                                        else if (src+1 < format.Length && pFormat[src] == '+' && pFormat[src + 1] == '0')
+                                        else if (src + 1 < format.Length && pFormat[src] == '+' && pFormat[src + 1] == '0')
                                         {
                                             // Handles E+0
                                             positiveSign = true;
                                         }
-                                        else if (src+1 < format.Length && pFormat[src] == '-' && pFormat[src + 1] == '0')
+                                        else if (src + 1 < format.Length && pFormat[src] == '-' && pFormat[src + 1] == '0')
                                         {
                                             // Handles E-0
                                             // Do nothing, this is just a place holder s.t. we don't break out of the loop.

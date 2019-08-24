@@ -22,7 +22,7 @@ namespace System.Data.SqlClient
 
         private GCHandle _gcHandle;                                    // keeps this object alive until we're closed.
 
-        private Dictionary<IntPtr, SNIPacket> _pendingWritePackets = new Dictionary<IntPtr, SNIPacket>(); // Stores write packets that have been sent to SNI, but have not yet finished writing (i.e. we are waiting for SNI's callback)
+        private readonly Dictionary<IntPtr, SNIPacket> _pendingWritePackets = new Dictionary<IntPtr, SNIPacket>(); // Stores write packets that have been sent to SNI, but have not yet finished writing (i.e. we are waiting for SNI's callback)
 
         internal TdsParserStateObjectNative(TdsParser parser, TdsParserStateObject physicalConnection, bool async) :
             base(parser, physicalConnection, async)
@@ -246,7 +246,7 @@ namespace System.Data.SqlClient
 
         internal override bool IsValidPacket(PacketHandle packetPointer)
         {
-            Debug.Assert(packetPointer.Type == PacketHandle.NativePointerType || packetPointer.Type==PacketHandle.NativePacketType, "unexpected packet type when requiring NativePointer");
+            Debug.Assert(packetPointer.Type == PacketHandle.NativePointerType || packetPointer.Type == PacketHandle.NativePacketType, "unexpected packet type when requiring NativePointer");
             return (
                 (packetPointer.Type == PacketHandle.NativePointerType && packetPointer.NativePointer != IntPtr.Zero)
                 ||
@@ -327,7 +327,7 @@ namespace System.Data.SqlClient
         internal sealed class WritePacketCache : IDisposable
         {
             private bool _disposed;
-            private Stack<SNIPacket> _packets;
+            private readonly Stack<SNIPacket> _packets;
 
             public WritePacketCache()
             {

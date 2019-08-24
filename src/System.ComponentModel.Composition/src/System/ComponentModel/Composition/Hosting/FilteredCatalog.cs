@@ -14,10 +14,10 @@ namespace System.ComponentModel.Composition.Hosting
 {
     public partial class FilteredCatalog : ComposablePartCatalog, INotifyComposablePartCatalogChanged
     {
-        private Func<ComposablePartDefinition, bool> _filter;
+        private readonly Func<ComposablePartDefinition, bool> _filter;
         private ComposablePartCatalog _innerCatalog;
         private FilteredCatalog _complement;
-        private object _lock = new object();
+        private readonly object _lock = new object();
         private volatile bool _isDisposed = false;
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace System.ComponentModel.Composition.Hosting
             }
         }
 
-/// <summary>
+        /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
@@ -173,12 +173,12 @@ namespace System.ComponentModel.Composition.Hosting
         /// </summary>
         public event EventHandler<ComposablePartCatalogChangeEventArgs> Changed;
 
-/// <summary>
+        /// <summary>
         /// Notify when the contents of the Catalog is changing.
         /// </summary>
         public event EventHandler<ComposablePartCatalogChangeEventArgs> Changing;
 
-/// <summary>
+        /// <summary>
         /// Raises the <see cref="Changed"/> event.
         /// </summary>
         /// <param name="e">The <see cref="System.ComponentModel.Composition.Hosting.ComposablePartCatalogChangeEventArgs"/> instance containing the event data.</param>

@@ -39,7 +39,7 @@ namespace System.Drawing.Printing
         private short _copies = -1;
         private Duplex _duplex = System.Drawing.Printing.Duplex.Default;
         private TriState _collate = TriState.Default;
-        private PageSettings _defaultPageSettings;
+        private readonly PageSettings _defaultPageSettings;
         private int _fromPage;
         private int _toPage;
         private int _maxPage = 9999;
@@ -1337,7 +1337,7 @@ namespace System.Drawing.Printing
 
             public IEnumerator GetEnumerator()
             {
-                return new ArrayEnumerator(_array, 0, Count);
+                return new ArrayEnumerator(_array, Count);
             }
 
             int ICollection.Count
@@ -1429,7 +1429,7 @@ namespace System.Drawing.Printing
 
             public IEnumerator GetEnumerator()
             {
-                return new ArrayEnumerator(_array, 0, Count);
+                return new ArrayEnumerator(_array, Count);
             }
 
             int ICollection.Count
@@ -1519,7 +1519,7 @@ namespace System.Drawing.Printing
 
             public IEnumerator GetEnumerator()
             {
-                return new ArrayEnumerator(_array, 0, Count);
+                return new ArrayEnumerator(_array, Count);
             }
 
             int ICollection.Count
@@ -1608,7 +1608,7 @@ namespace System.Drawing.Printing
 
             public IEnumerator GetEnumerator()
             {
-                return new ArrayEnumerator(_array, 0, Count);
+                return new ArrayEnumerator(_array, Count);
             }
 
             int ICollection.Count
@@ -1666,29 +1666,18 @@ namespace System.Drawing.Printing
 
         private class ArrayEnumerator : IEnumerator
         {
-            private object[] _array;
-            private object _item;
+            private readonly object[] _array;
+            private readonly int _endIndex;
             private int _index;
-            private int _startIndex;
-            private int _endIndex;
+            private object _item;
 
-            public ArrayEnumerator(object[] array, int startIndex, int count)
+            public ArrayEnumerator(object[] array, int count)
             {
                 _array = array;
-                _startIndex = startIndex;
-                _endIndex = _index + count;
-
-                _index = _startIndex;
+                _endIndex = count;
             }
 
-            public object Current
-            {
-                get
-                {
-                    return _item;
-                }
-            }
-
+            public object Current => _item;
 
             public bool MoveNext()
             {
@@ -1701,8 +1690,7 @@ namespace System.Drawing.Printing
             public void Reset()
             {
                 // Position enumerator before first item
-
-                _index = _startIndex;
+                _index = 0;
                 _item = null;
             }
         }

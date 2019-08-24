@@ -9,15 +9,15 @@ namespace System.DirectoryServices.ActiveDirectory
 {
     public class ActiveDirectoryInterSiteTransport : IDisposable
     {
-        private DirectoryContext _context = null;
-        private DirectoryEntry _cachedEntry = null;
-        private ActiveDirectoryTransportType _transport;
+        private readonly DirectoryContext _context = null;
+        private readonly DirectoryEntry _cachedEntry = null;
+        private readonly ActiveDirectoryTransportType _transport;
         private bool _disposed = false;
         private bool _linkRetrieved = false;
         private bool _bridgeRetrieved = false;
 
-        private ReadOnlySiteLinkCollection _siteLinkCollection = new ReadOnlySiteLinkCollection();
-        private ReadOnlySiteLinkBridgeCollection _bridgeCollection = new ReadOnlySiteLinkBridgeCollection();
+        private readonly ReadOnlySiteLinkCollection _siteLinkCollection = new ReadOnlySiteLinkCollection();
+        private readonly ReadOnlySiteLinkBridgeCollection _bridgeCollection = new ReadOnlySiteLinkBridgeCollection();
 
         internal ActiveDirectoryInterSiteTransport(DirectoryContext context, ActiveDirectoryTransportType transport, DirectoryEntry entry)
         {
@@ -71,7 +71,7 @@ namespace System.DirectoryServices.ActiveDirectory
             catch (ActiveDirectoryObjectNotFoundException)
             {
                 // this is the case where the context is a config set and we could not find an ADAM instance in that config set
-                throw new ActiveDirectoryOperationException(SR.Format(SR.ADAMInstanceNotFoundInConfigSet , context.Name));
+                throw new ActiveDirectoryOperationException(SR.Format(SR.ADAMInstanceNotFoundInConfigSet, context.Name));
             }
 
             try

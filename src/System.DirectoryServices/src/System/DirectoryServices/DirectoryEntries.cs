@@ -37,7 +37,7 @@ namespace System.DirectoryServices
         private void CheckIsContainer()
         {
             if (!_container.IsContainer)
-                throw new InvalidOperationException(SR.Format(SR.DSNotAContainer , _container.Path));
+                throw new InvalidOperationException(SR.Format(SR.DSNotAContainer, _container.Path));
         }
 
         /// <devdoc>
@@ -104,7 +104,7 @@ namespace System.DirectoryServices
         /// </devdoc>
         private class ChildEnumerator : IEnumerator
         {
-            private DirectoryEntry _container;
+            private readonly DirectoryEntry _container;
             private SafeNativeMethods.EnumVariant _enumVariant;
             private DirectoryEntry _currentEntry;
 

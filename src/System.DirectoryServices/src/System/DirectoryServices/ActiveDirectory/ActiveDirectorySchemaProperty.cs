@@ -25,8 +25,8 @@ namespace System.DirectoryServices.ActiveDirectory
         private DirectoryEntry _schemaEntry = null;
         private DirectoryEntry _propertyEntry = null;
         private DirectoryEntry _abstractPropertyEntry = null;
-        private NativeComInterfaces.IAdsProperty _iadsProperty = null;
-        private DirectoryContext _context = null;
+        private readonly NativeComInterfaces.IAdsProperty _iadsProperty = null;
+        private readonly DirectoryContext _context = null;
         internal bool isBound = false;
         private bool _disposed = false;
         private ActiveDirectorySchema _schema = null;
@@ -35,7 +35,7 @@ namespace System.DirectoryServices.ActiveDirectory
         private SearchResult _propertyValuesFromServer = null;
 
         // private variables for caching properties
-        private string _ldapDisplayName = null;
+        private readonly string _ldapDisplayName = null;
         private string _commonName = null;
         private string _oid = null;
         private ActiveDirectorySyntax _syntax = (ActiveDirectorySyntax)(-1);
@@ -61,23 +61,22 @@ namespace System.DirectoryServices.ActiveDirectory
 
         // OMObjectClass values for the syntax
         //0x2B0C0287731C00854A
-        private static OMObjectClass s_dnOMObjectClass = new OMObjectClass(new byte[] { 0x2B, 0x0C, 0x02, 0x87, 0x73, 0x1C, 0x00, 0x85, 0x4A });
+        private static readonly OMObjectClass s_dnOMObjectClass = new OMObjectClass(new byte[] { 0x2B, 0x0C, 0x02, 0x87, 0x73, 0x1C, 0x00, 0x85, 0x4A });
         //0x2A864886F7140101010C
-        private static OMObjectClass s_dNWithStringOMObjectClass = new OMObjectClass(new byte[] { 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x14, 0x01, 0x01, 0x01, 0x0C });
+        private static readonly OMObjectClass s_dNWithStringOMObjectClass = new OMObjectClass(new byte[] { 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x14, 0x01, 0x01, 0x01, 0x0C });
         //0x2A864886F7140101010B
-        private static OMObjectClass s_dNWithBinaryOMObjectClass = new OMObjectClass(new byte[] { 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x14, 0x01, 0x01, 0x01, 0x0B });
+        private static readonly OMObjectClass s_dNWithBinaryOMObjectClass = new OMObjectClass(new byte[] { 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x14, 0x01, 0x01, 0x01, 0x0B });
         //0x2A864886F71401010106
-        private static OMObjectClass s_replicaLinkOMObjectClass = new OMObjectClass(new byte[] { 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x14, 0x01, 0x01, 0x01, 0x06 });
+        private static readonly OMObjectClass s_replicaLinkOMObjectClass = new OMObjectClass(new byte[] { 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x14, 0x01, 0x01, 0x01, 0x06 });
         //0x2B0C0287731C00855C
-        private static OMObjectClass s_presentationAddressOMObjectClass = new OMObjectClass(new byte[] { 0x2B, 0x0C, 0x02, 0x87, 0x73, 0x1C, 0x00, 0x85, 0x5C });
+        private static readonly OMObjectClass s_presentationAddressOMObjectClass = new OMObjectClass(new byte[] { 0x2B, 0x0C, 0x02, 0x87, 0x73, 0x1C, 0x00, 0x85, 0x5C });
         //0x2B0C0287731C00853E
-        private static OMObjectClass s_accessPointDnOMObjectClass = new OMObjectClass(new byte[] { 0x2B, 0x0C, 0x02, 0x87, 0x73, 0x1C, 0x00, 0x85, 0x3E });
+        private static readonly OMObjectClass s_accessPointDnOMObjectClass = new OMObjectClass(new byte[] { 0x2B, 0x0C, 0x02, 0x87, 0x73, 0x1C, 0x00, 0x85, 0x3E });
         //0x56060102050B1D
-        private static OMObjectClass s_oRNameOMObjectClass = new OMObjectClass(new byte[] { 0x56, 0x06, 0x01, 0x02, 0x05, 0x0B, 0x1D });
+        private static readonly OMObjectClass s_oRNameOMObjectClass = new OMObjectClass(new byte[] { 0x56, 0x06, 0x01, 0x02, 0x05, 0x0B, 0x1D });
 
         // syntaxes
-        private static int s_syntaxesCount = 23;
-        private static Syntax[] s_syntaxes = {/* CaseExactString */ new Syntax("2.5.5.3", 27, null),
+        private static readonly Syntax[] s_syntaxes = {/* CaseExactString */ new Syntax("2.5.5.3", 27, null),
                                               /* CaseIgnoreString */ new Syntax("2.5.5.4", 20, null),
                                               /* NumericString */ new Syntax("2.5.5.6", 18, null),
                                               /* DirectoryString */ new Syntax("2.5.5.12", 64, null),
@@ -183,7 +182,7 @@ namespace System.DirectoryServices.ActiveDirectory
             catch (ActiveDirectoryObjectNotFoundException)
             {
                 // this is the case where the context is a config set and we could not find an ADAM instance in that config set
-                throw new ActiveDirectoryOperationException(SR.Format(SR.ADAMInstanceNotFoundInConfigSet , context.Name));
+                throw new ActiveDirectoryOperationException(SR.Format(SR.ADAMInstanceNotFoundInConfigSet, context.Name));
             }
 
             // set the bind flag
@@ -348,7 +347,7 @@ namespace System.DirectoryServices.ActiveDirectory
                 catch (ActiveDirectoryObjectNotFoundException)
                 {
                     // this is the case where the context is a config set and we could not find an ADAM instance in that config set
-                    throw new ActiveDirectoryOperationException(SR.Format(SR.ADAMInstanceNotFoundInConfigSet , _context.Name));
+                    throw new ActiveDirectoryOperationException(SR.Format(SR.ADAMInstanceNotFoundInConfigSet, _context.Name));
                 }
 
                 // set the ldap display name property
@@ -1012,7 +1011,7 @@ namespace System.DirectoryServices.ActiveDirectory
 
                                 if (linkedProperties.Count != 1)
                                 {
-                                    throw new ActiveDirectoryObjectNotFoundException(SR.Format(SR.LinkedPropertyNotFound , linkIdToSearch), typeof(ActiveDirectorySchemaProperty), null);
+                                    throw new ActiveDirectoryObjectNotFoundException(SR.Format(SR.LinkedPropertyNotFound, linkIdToSearch), typeof(ActiveDirectorySchemaProperty), null);
                                 }
 
                                 _linkedProperty = linkedProperties[0];
@@ -1149,7 +1148,7 @@ namespace System.DirectoryServices.ActiveDirectory
                 {
                     if (mustExist)
                     {
-                        throw new ActiveDirectoryOperationException(SR.Format(SR.PropertyNotFound , propertyName));
+                        throw new ActiveDirectoryOperationException(SR.Format(SR.PropertyNotFound, propertyName));
                     }
                 }
                 else
@@ -1410,19 +1409,19 @@ namespace System.DirectoryServices.ActiveDirectory
 
         private ActiveDirectorySyntax MapSyntax(string syntaxId, int oMID, OMObjectClass oMObjectClass)
         {
-            for (int i = 0; i < s_syntaxesCount; i++)
+            for (int i = 0; i < s_syntaxes.Length; i++)
             {
                 if (s_syntaxes[i].Equals(new Syntax(syntaxId, oMID, oMObjectClass)))
                 {
                     return (ActiveDirectorySyntax)i;
                 }
             }
-            throw new ActiveDirectoryOperationException(SR.Format(SR.UnknownSyntax , _ldapDisplayName));
+            throw new ActiveDirectoryOperationException(SR.Format(SR.UnknownSyntax, _ldapDisplayName));
         }
 
         private void SetSyntax(ActiveDirectorySyntax syntax)
         {
-            if ((((int)syntax) < 0) || (((int)syntax) > (s_syntaxesCount - 1)))
+            if ((((int)syntax) < 0) || (((int)syntax) > (s_syntaxes.Length - 1)))
             {
                 throw new InvalidEnumArgumentException(nameof(syntax), (int)syntax, typeof(ActiveDirectorySyntax));
             }

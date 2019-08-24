@@ -22,7 +22,7 @@ namespace System.IO
         private readonly Encoding _encoding;
         private readonly Encoder _encoder;
 
-        private bool _leaveOpen;
+        private readonly bool _leaveOpen;
 
         // Perf optimization stuff
         private byte[]? _largeByteBuffer;  // temp space for writing chars.
@@ -370,7 +370,6 @@ namespace System.IO
 
             if (len <= _largeByteBuffer.Length)
             {
-                //Debug.Assert(len == _encoding.GetBytes(chars, 0, chars.Length, _largeByteBuffer, 0), "encoding's GetByteCount & GetBytes gave different answers!  encoding type: "+_encoding.GetType().Name);
                 _encoding.GetBytes(value, 0, value.Length, _largeByteBuffer, 0);
                 OutStream.Write(_largeByteBuffer, 0, len);
             }
